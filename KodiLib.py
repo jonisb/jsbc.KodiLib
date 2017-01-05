@@ -93,10 +93,23 @@ def DefaultSettings(Data={}):
         ('client', [
             ('name', 'KodiLib'),
         ]),
+        ('server', [
+            ('friendlyName', 'Kodi'),
+            ('name', 'Kodi'),
+            ('version', ''),
+            ('network', [
+                ('address', 'localhost'),
+                ('http', {
+                    'port': 8080,
+                }),
+                ('upnp', {
+                    'id': '',
+                }),
+            ]),
+        ]),
     ], Data)
     """
         ('client', [
-            ('name', 'KodiLib'),
             ('network', [
                 ('useragent', "UserAgent"),
                 ('tcp', {
