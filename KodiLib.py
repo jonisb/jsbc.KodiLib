@@ -42,7 +42,7 @@ class SettingsClass(OrderedDict):
         except KeyError:
             if isinstance(self.Default[key], SettingsClass):
                 self[key] = self.Default[key]
-        return self.Default[key] # Todo Return copy?
+        return self.Default[key]  # TODO Return copy?
 
     def __setitem__(self, key, value):
         try:
@@ -51,9 +51,9 @@ class SettingsClass(OrderedDict):
             else:
                 try:
                     del self[key]
-                except KeyError: # Todo
+                except KeyError:  # TODO
                     pass
-        except KeyError: # Todo
+        except KeyError:  # TODO
             raise KeyError('Default key not defined', key)
 
     def addDefault(self, Default):
@@ -88,7 +88,7 @@ class SettingsClass(OrderedDict):
 
 
 def DefaultSettings(Data={}):
-    """ """ # Todo
+    """ """  # TODO
     return SettingsClass([
         ('client', [
             ('name', 'KodiLib'),
