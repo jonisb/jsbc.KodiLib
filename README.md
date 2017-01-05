@@ -1,7 +1,7 @@
 [![Code Climate](https://codeclimate.com/github/jonisb/KodiLib/badges/gpa.svg)](https://codeclimate.com/github/jonisb/KodiLib)
 [![Issue Count](https://codeclimate.com/github/jonisb/KodiLib/badges/issue_count.svg)](https://codeclimate.com/github/jonisb/KodiLib)
 
-# Kodi support library in Python.
+# Kodi support library in Python
 
 ## Support modules needed
 
