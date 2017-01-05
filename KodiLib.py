@@ -4,11 +4,12 @@ KodiLib:
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 __version__ = '0.0.0'
 __all__ = [] # "echo", "surround", "reverse"
-
-import logging
-logger = logging.getLogger(__name__)
 
 logger.info('Importing "OrderedDict" module.')
 try:
