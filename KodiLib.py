@@ -23,6 +23,7 @@ except ImportError:
         raise
 logger.info('Importing "OrderedDict" module, done.')
 
+
 class SettingsClass(OrderedDict):
     def __init__(self, Default=[], Data={}):
         super(SettingsClass, self).__init__()
@@ -84,6 +85,7 @@ class SettingsClass(OrderedDict):
                 self[key] = value
             else:
                 del self[key]
+
 
 def DefaultSettings(Data={}):
     """ """ # Todo
