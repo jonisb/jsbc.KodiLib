@@ -8,6 +8,8 @@ import urllib2
 import logging
 
 from pythoncompat import OrderedDict
+import network
+from network import DownloadURL, DownloadPage
 
 logger = logging.getLogger(__name__)
 
@@ -118,6 +120,7 @@ class kodi(object):
         self.settings = settings
         global Settings
         Settings = settings
+        network.init(settings)
 
     def connect(self):
         pass
