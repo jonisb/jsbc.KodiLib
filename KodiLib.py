@@ -6,7 +6,10 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import os
 import urllib2
+import xml.dom.minidom
 import logging
+
+import regex
 
 from pythoncompat import OrderedDict
 import network
@@ -120,6 +123,155 @@ def DefaultSettings(Data={}):
 
 
     return Settings
+
+
+class ActionBaseClass(OrderedDict):
+    def __init__(self, Commands):
+        super(ActionBaseClass, self).__init__()
+        self['All'] = {}
+
+        if isinstance(Commands[0], basestring):
+            Commands = (Commands,)
+
+        for Command in Commands:
+            try:
+                getattr(self, Command[0])(*Command[1:])
+            except AttributeError:
+                print("Command missing:", Command[0])
+                logger.exception("")
+
+            except Exception:
+                print("Error:", Command[0])
+                logger.exception("")
+
+    def __call__(self, category='All'):
+        return sorted(list(self[category][action]['action'] for action in self[category]), key=unicode.lower)
+
+    def Code(self, URL, Pattern):
+        Data = DownloadURL(URL)
+        self.ParseActions(Pattern, Data)
+
+    def ParseActions(self, Pattern, Data, Category=''):
+        """ """  # Todo
+        result = regex.search(Pattern['Header'], Data)
+        try:
+            Category = result.group("category")
+        except IndexError: pass
+        start = result.end()
+        for line in Data[start:].splitlines(False):
+            if Pattern['End'] == line:
+                Category = ''
+                break
+            else:
+                result = regex.search(Pattern['Action'], line)
+                if result:
+                    if Category not in self: self[Category] = {}
+                    Action = result.groupdict()
+                    if 'options' in Action:
+                        Action['options'] = int(Action['options'])
+                    Action['category'] = Category
+                    for label in Action:
+                        if not Action[label]:
+                            Action[label] = ''
+                    self[Category][Action['action'].lower()] = Action
+                    self['All'][Action['action'].lower()] = Action
+
+                else:
+                    result = regex.search(Pattern['Category'], line) # Todo
+                    if result and result.group("category"):
+                        Category = result.group("category")
+
+    def HTML(self, URL, Headers):
+        Data = DownloadURL(URL)
+        Data = self.GetHTML(Data, Headers)
+
+        for action in self['All']:
+            try:
+                self['All'][action]['action'] = Data[action]['action']
+            except: pass
+            try:
+                if len(self['All'][action]['description']) < len(Data[action]['description']):
+                    self['All'][action]['description'] = Data[action]['description']
+            except: pass
+            try:
+                self['All'][action]['syntax'] = Data[action]['syntax']
+            except: pass
+
+    def GetHTML(self, Data, Headers):
+        """ GetDocumentation ...
+
+        Args:
+            Data (string): Document to parse
+
+        Returns:
+            dict: Command list
+        """  # Todo
+        ActionDict = {}
+        ActionList = self.GetTable(xml.dom.minidom.parseString(Data.encode('utf-8')), Headers) # Todo
+
+        for Action in ActionList:
+            result = regex.search(r'(?P<action>[^<>]+)\s*<(?P<first>\d)-(?P<last>\d)>', Action[Headers[0]]) # Todo
+            if result:
+                actions = [result.group('action').strip() + str(i) for i in range(int(result.group('first')), int(result.group('last')) + 1)] # Todo
+            else:
+                actions = [Action[Headers[0]]] # Todo
+            for action in actions:
+                for Syntax in action.split('\n'):
+                    Syntax = Syntax.strip()
+                    action = Syntax.split('(')[0]
+                    Description = Action[Headers[1]]
+                    ActionDict[action.lower()] = {
+                                            'action': action, 'syntax': Syntax, 'description': Description}
+
+        return ActionDict
+
+    def GetTable(self, XML, Headers):
+        def ListTags(XML, Tag):
+            """ """ # Todo
+            Current = XML
+            while Current:
+                yield Current
+                while True:
+                    Current = Current.nextSibling
+                    if Current == None or Current.nodeName == Tag:
+                        break
+
+        def TestTable(XML, Headers):
+            try:
+                th = ListTags(XML.getElementsByTagName("th")[0], "th")
+            except IndexError:
+                return False
+            else:
+                for header in Headers:
+                    if XMLText(th.next()).strip() != header:
+                        return False
+                else:
+                    return True
+
+        def FindTable(XML, Headers):
+            """ """ # Todo
+            for Table in XML.getElementsByTagName("table"):
+                for table in ListTags(Table, "table"):
+                    if TestTable(table, Headers):
+                        return table
+                else:
+                    continue
+                break
+
+        ActionList = []
+        for table in ListTags(FindTable(XML, Headers), "table"):
+            if TestTable(table, Headers):
+                for tr in ListTags(table.getElementsByTagName("tr")[0], "tr"):
+                    try:
+                        td = list(ListTags(tr.getElementsByTagName("td")[0], "td"))
+                    except IndexError: pass
+                    else:
+                        Dict = {}
+                        for i, header in enumerate(Headers):
+                            Dict[header] = XMLText(td[i]).strip()
+
+                        ActionList.append(Dict)
+        return ActionList
 
 
 class kodi(object):
