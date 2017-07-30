@@ -79,7 +79,8 @@ class SettingsClass(OrderedDict):
 
 def DefaultSettings(Data={}):
     """ """  # TODO
-    return SettingsClass([
+
+    Settings = SettingsClass([
         ('client', [
             ('name', 'KodiLib'),
         ]),
@@ -88,7 +89,7 @@ def DefaultSettings(Data={}):
             ('name', 'Kodi'),
             ('version', ''),
             ('network', [
-                ('address', 'localhost'),
+                ('ip', 'localhost'),
                 ('http', {
                     'port': 8080,
                 }),
@@ -98,21 +99,6 @@ def DefaultSettings(Data={}):
             ]),
         ]),
     ], Data)
-    """
-        ('client', [
-            ('network', [
-                ('useragent', "UserAgent"),
-                ('tcp', {
-                    'timeout': 1,
-                    'buffersize': 4096,
-                }),
-            ]),
-            ('jsonrpc', [
-                ('enabled', True),
-                ('notifications', {
-                    'enabled': True,
-                }),
-            ]),
-        ]),
-    ])
-    """
+
+
+    return Settings
