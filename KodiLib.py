@@ -125,6 +125,18 @@ def DefaultSettings(Data={}):
     return Settings
 
 
+def XMLText(Node):
+    """ """  # Todo
+    text = ''
+    try:
+        for n in Node.childNodes:
+            text += n.nodeValue+' ' if n.nodeName == '#text' else XMLText(n)
+    except:
+        print("Try:", Node.nodeValue, Node.nodeName)
+
+    return text
+
+
 class ActionBaseClass(OrderedDict):
     def __init__(self, Commands):
         super(ActionBaseClass, self).__init__()
