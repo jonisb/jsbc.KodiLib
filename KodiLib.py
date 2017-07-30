@@ -12,7 +12,7 @@ from pythoncompat import OrderedDict
 logger = logging.getLogger(__name__)
 
 __version__ = '0.0.0'
-__all__ = [] # "echo", "surround", "reverse"
+__all__ = []
 
 
 class SettingsClass(OrderedDict):
@@ -28,7 +28,6 @@ class SettingsClass(OrderedDict):
             if isinstance(value, dict) or self.Default[key] != value:
                 return value
             else:
-                #super(SettingsClass, self).__delitem__(key)
                 del self[key]
         except KeyError:
             if isinstance(self.Default[key], SettingsClass):
