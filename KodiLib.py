@@ -110,3 +110,22 @@ def DefaultSettings(Data={}):
 
 
     return Settings
+
+
+class kodi(object):
+    def __init__(self, settings=DefaultSettings(), callback=None):  # TODO
+        logger.debug('kodi init.')
+
+    def connect(self):
+        pass
+
+    def GetCommands(self, Commands):
+        pass
+
+    def disconnect(self):
+        pass
+
+    def close(self):
+        self.disconnect()
+
+    __del__ = close
