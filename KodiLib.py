@@ -4,6 +4,7 @@ KodiLib:
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import urllib2
 import logging
 
 from pythoncompat import OrderedDict
