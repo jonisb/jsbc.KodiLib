@@ -115,6 +115,9 @@ def DefaultSettings(Data={}):
 class kodi(object):
     def __init__(self, settings=DefaultSettings(), callback=None):  # TODO
         logger.debug('kodi init.')
+        self.settings = settings
+        global Settings
+        Settings = settings
 
     def connect(self):
         pass
