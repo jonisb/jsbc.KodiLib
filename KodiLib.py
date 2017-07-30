@@ -83,6 +83,14 @@ def DefaultSettings(Data={}):
     Settings = SettingsClass([
         ('client', [
             ('name', 'KodiLib'),
+            ('cache path', 'cache'),
+            ('network', [
+                ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, urllib2.build_opener().addheaders[0][1])),
+            ]),
+            ('icon', [
+                ('url', None),
+                ('type', None),
+            ]),
         ]),
         ('server', [
             ('friendlyName', 'Kodi'),
