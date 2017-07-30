@@ -11,6 +11,7 @@ import logging
 from pythoncompat import OrderedDict
 import network
 from network import DownloadURL, DownloadPage
+import eventserver
 
 logger = logging.getLogger(__name__)
 
@@ -90,6 +91,9 @@ def DefaultSettings(Data={}):
             ('network', [
                 ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, urllib2.build_opener().addheaders[0][1])),
             ]),
+            ('eventclient', [
+                ('enabled', True),
+            ]),
             ('icon', [
                 ('url', None),
                 ('type', None),
@@ -101,6 +105,9 @@ def DefaultSettings(Data={}):
             ('version', ''),
             ('network', [
                 ('ip', 'localhost'),
+                ('udp', {
+                    'port': 9777,
+                }),
                 ('http', {
                     'port': 8080,
                 }),
@@ -130,15 +137,23 @@ class kodi(object):
             except WindowsError:
                 if not os.path.exists(settings['client']['cache path']):
                     raise
+        if self.settings['client']['eventclient']['enabled']:
+            self.eventclient = eventserver.eventclient(settings)
 
     def connect(self):
-        pass
+        try:
+            self.eventclient.connect()
+        except AttributeError:
+            pass
 
     def GetCommands(self, Commands):
         pass
 
     def disconnect(self):
-        pass
+        try:
+            self.eventclient.close()
+        except AttributeError:
+            pass
 
     def close(self):
         self.disconnect()
