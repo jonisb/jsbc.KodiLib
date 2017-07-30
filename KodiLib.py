@@ -4,6 +4,7 @@ KodiLib:
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import os
 import urllib2
 import logging
 
@@ -121,6 +122,14 @@ class kodi(object):
         global Settings
         Settings = settings
         network.init(settings)
+        try:
+            os.makedirs(settings['client']['cache path'], exist_ok=True)
+        except TypeError:
+            try:
+                os.makedirs(settings['client']['cache path'])  # if "exist_ok" option is not supported
+            except WindowsError:
+                if not os.path.exists(settings['client']['cache path']):
+                    raise
 
     def connect(self):
         pass
