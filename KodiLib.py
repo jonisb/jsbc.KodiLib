@@ -5,6 +5,7 @@ KodiLib:
 from __future__ import print_function, unicode_literals, division, absolute_import
 
 import os
+import ast
 import urllib2
 import xml.dom.minidom
 import logging
@@ -119,8 +120,19 @@ def DefaultSettings(Data={}):
                 }),
             ]),
         ]),
+        ('commands', [
+            ('actions', ''),
+        ]),
     ], Data)
 
+    URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/ActionTranslator.cpp'
+    Pattern = {
+                        'Header': r"static const std::map<(?P<group>Action)Name, ActionID> ActionMappings =",
+                        'Action': r'"(?P<action>.+)"(?:.*? // (?P<description>.*))?',
+                        'End': "};",
+                        'Category': r' // (?P<category>.+)'
+                    }
+    Settings['commands']['actions'] = "(('Code', {0}, {1}), ('HTML', 'http://kodi.wiki/view/Action_IDs', ['Action', 'Description']))".format(repr(URL), Pattern)
 
     return Settings
 
@@ -311,7 +323,7 @@ class kodi(object):
             pass
 
     def GetCommands(self, Commands):
-        pass
+        return ActionBaseClass(ast.literal_eval(self.settings['commands'][Commands]))
 
     def disconnect(self):
         try:
