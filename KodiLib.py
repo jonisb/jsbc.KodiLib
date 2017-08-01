@@ -159,20 +159,22 @@ class ActionBaseClass(OrderedDict):
         if isinstance(Commands[0], basestring):
             Commands = (Commands,)
 
-        for Command in Commands:
-            try:
-                getattr(self, Command[0])(*Command[1:])
-            except AttributeError:
-                print("Command missing:", Command[0])
-                logger.exception("")
-
-            except Exception:
-                print("Error:", Command[0])
-                logger.exception("")
+        self.Commands = Commands
+        self.Update()
         self.cached = False
 
     def __call__(self, category='All'):
         return sorted(list(self[category][action]['action'] for action in self[category]), key=unicode.lower)
+
+    def Update(self):
+        for Command in self.Commands:
+            try:
+                getattr(self, Command[0])(*Command[1:])
+            except AttributeError:
+                logger.exception("Command missing: %s", Command[0])
+
+            except Exception:
+                logger.exception("Error: %s", Command[0])
 
     def Code(self, URL, Pattern):
         Data = DownloadURL(URL, cached=self.cached)
