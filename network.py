@@ -5,7 +5,8 @@ import os
 import contextlib
 import urllib2
 import time
-import pickle
+import cPickle
+import bz2
 
 import logging
 logger = logging.getLogger(__name__)
@@ -52,7 +53,8 @@ def DownloadURL(URL, force=False, cached=False): # TODO
         DownloadURL.URLCache
     except AttributeError:
         try:
-            DownloadURL.URLCache = pickle.load(open(os.path.join(Settings['client']['cache path'], 'URLCache.bin'), 'rb'))  # TODO
+            with open(os.path.join(Settings['client']['cache path'], 'URLCache.bz2'), 'rb') as f:
+                DownloadURL.URLCache = cPickle.loads(bz2.decompress(f.read()))
         except IOError:
             DownloadURL.URLCache = {}
     finally:
@@ -93,6 +95,7 @@ def DownloadURL(URL, force=False, cached=False): # TODO
 
     if SaveCache:
         URLCache[URL] = Actions
-        pickle.dump(URLCache, open(os.path.join(Settings['client']['cache path'], 'URLCache.bin'), 'wb'))  # TODO
+        with open(os.path.join(Settings['client']['cache path'], 'URLCache.bz2'), 'wb') as f:
+            f.write(bz2.compress(cPickle.dumps(URLCache)))
 
     return Actions['Page']
