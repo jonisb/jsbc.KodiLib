@@ -154,6 +154,8 @@ class ActionBaseClass(OrderedDict):
         super(ActionBaseClass, self).__init__()
         self['All'] = {}
 
+        self.cached = True
+
         if isinstance(Commands[0], basestring):
             Commands = (Commands,)
 
@@ -167,12 +169,13 @@ class ActionBaseClass(OrderedDict):
             except Exception:
                 print("Error:", Command[0])
                 logger.exception("")
+        self.cached = False
 
     def __call__(self, category='All'):
         return sorted(list(self[category][action]['action'] for action in self[category]), key=unicode.lower)
 
     def Code(self, URL, Pattern):
-        Data = DownloadURL(URL)
+        Data = DownloadURL(URL, cached=self.cached)
         self.ParseActions(Pattern, Data)
 
     def ParseActions(self, Pattern, Data, Category=''):
@@ -206,7 +209,7 @@ class ActionBaseClass(OrderedDict):
                         Category = result.group("category")
 
     def HTML(self, URL, Headers):
-        Data = DownloadURL(URL)
+        Data = DownloadURL(URL, cached=self.cached)
         Data = self.GetHTML(Data, Headers)
 
         for action in self['All']:

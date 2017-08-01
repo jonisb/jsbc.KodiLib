@@ -46,7 +46,7 @@ def DownloadPage(URL, hdr):
     return Result
 
 
-def DownloadURL(URL, force=False): # TODO
+def DownloadURL(URL, force=False, cached=False): # TODO
     """ """  # TODO
     try:
         DownloadURL.URLCache
@@ -66,7 +66,9 @@ def DownloadURL(URL, force=False): # TODO
         with open(urlparse(URL).path, 'rb') as f:
             Actions = {'Page': f.read()}
     else:
-        if not force and URL in URLCache and 'Cache-Expire' in URLCache[URL]:
+        if cached and URL in URLCache:
+            Actions = URLCache[URL]
+        elif not force and URL in URLCache and 'Cache-Expire' in URLCache[URL]:
             if time.time() > URLCache[URL]['Cache-Expire']:
                 try:
                     hdr['If-None-Match'] = URLCache[URL]['ETag']
