@@ -12,10 +12,10 @@ import logging
 
 import regex
 
-from pythoncompat import OrderedDict
-import network
-from network import DownloadURL, DownloadPage
-import eventserver
+from .pythoncompat import OrderedDict
+from . import network
+from .network import DownloadURL, DownloadPage
+from . import eventserver
 
 logger = logging.getLogger(__name__)
 

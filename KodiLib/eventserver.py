@@ -11,7 +11,7 @@ from socket import *
 from struct import pack
 from threading import Thread, Event
 import time
-from network import *
+from .network import *
 
 KEY_VKEY  = 0xF000  # a virtual key/functional key e.g. cursor left
 KEY_ASCII = 0xF100  # a printable character in the range of TRUE ASCII (from 0 to 127)
