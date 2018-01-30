@@ -90,8 +90,11 @@ class eventclient(object):
         self._stopPing = Event()
 
     def connect(self):
-        icon_file = DownloadURL(self.settings['client']['icon']['url'])
         icon_type = get_icon_type(self.settings['client']['icon']['type'])
+        if icon_type:
+            icon_file = DownloadURL(self.settings['client']['icon']['url'])
+        else:
+            icon_file = None
 
         self.send(Packet_HELO(uid=self.uid, device_name=self.name, iconfile=icon_file, icontype=icon_type))
         self._PingThread = Thread(target=self.keepalive, args=(self._stopPing,))
