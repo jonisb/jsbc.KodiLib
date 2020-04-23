@@ -125,7 +125,7 @@ def DefaultSettings(Data={}):
         ]),
     ], Data)
 
-    URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/ActionTranslator.cpp'
+    URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/actions/ActionTranslator.cpp'
     Pattern = {
                         'Header': r"static const std::map<(?P<group>Action)Name, ActionID> ActionMappings =",
                         'Action': r'"(?P<action>.+)"(?:.*? // (?P<description>.*))?',
