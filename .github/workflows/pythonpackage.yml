@@ -16,6 +16,7 @@ jobs:
     strategy:
       matrix:
         python-version: [2.7]
+        architecture: ['x64', 'x86']
 
     steps:
     - uses: actions/checkout@v2
