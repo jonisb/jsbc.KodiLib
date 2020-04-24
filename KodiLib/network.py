@@ -3,9 +3,15 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import os
 import contextlib
-import urllib2
+try:
+    from urllib.request import urlopen, Request, HTTPError, URLError
+except ImportError:
+    from urllib2 import urlopen, Request, HTTPError, URLError
 import time
-import cPickle
+try:
+    import cPickle
+except ImportError:
+    import pickle as cPickle
 import bz2
 
 import logging
@@ -19,7 +25,7 @@ def init(settings):
 def DownloadPage(URL, hdr):
     """ """ # TODO
     try:
-        with contextlib.closing(urllib2.urlopen(urllib2.Request(URL, headers=hdr))) as Builtins:
+        with contextlib.closing(urlopen(Request(URL, headers=hdr))) as Builtins:
             encoding = Builtins.headers['content-type'].split('charset=')[-1]
             Actions = Builtins.read()
             try:
@@ -27,7 +33,7 @@ def DownloadPage(URL, hdr):
             except LookupError:
                 pass
 
-    except (urllib2.HTTPError, urllib2.URLError) as err:
+    except (HTTPError, URLError) as err:
         if err.code == 304:
             Result = {'Code': err.code}
         else:

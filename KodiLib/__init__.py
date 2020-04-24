@@ -6,7 +6,10 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import os
 import ast
-import urllib2
+try:
+    from urllib.request import build_opener
+except ImportError:
+    from urllib2 import build_opener
 import xml.dom.minidom
 import logging
 
@@ -22,6 +25,15 @@ logger = logging.getLogger(__name__)
 __version__ = '0.0.0'
 __all__ = []
 
+try:
+    basestring
+except Exception:
+    basestring = str
+
+try:
+    unicode
+except Exception:
+    unicode = str
 
 class SettingsClass(OrderedDict):
     def __init__(self, Default=[], Data={}):
@@ -55,34 +67,64 @@ class SettingsClass(OrderedDict):
             raise KeyError('Default key not defined', key)
 
     def addDefault(self, Default):
-        for key, value in Default if isinstance(Default, list) else Default.iteritems():
-            if isinstance(value, (list, dict)):
-                try:
-                    self.Default[key].addDefault(value)
-                except KeyError:
+        try:
+            for key, value in Default if isinstance(Default, list) else Default.iteritems():
+                if isinstance(value, (list, dict)):
                     try:
-                        self.Default[key] = SettingsClass(value)
+                        self.Default[key].addDefault(value)
+                    except KeyError:
+                        try:
+                            self.Default[key] = SettingsClass(value)
+                        except ValueError:
+                            pass
+                        else:
+                            continue
+                    else:
+                        continue
+                self.Default[key] = value
+        except Exception:
+            for key, value in Default if isinstance(Default, list) else iter(Default.items()):
+                if isinstance(value, (list, dict)):
+                    try:
+                        self.Default[key].addDefault(value)
+                    except KeyError:
+                        try:
+                            self.Default[key] = SettingsClass(value)
+                        except ValueError:
+                            pass
+                        else:
+                            continue
+                    else:
+                        continue
+                self.Default[key] = value
+
+    def addData(self, Data):
+        try:
+            for key, value in Data.iteritems():
+                if isinstance(value, dict):
+                    try:
+                        self[key].addData(value)
                     except ValueError:
                         pass
                     else:
                         continue
+                if self.Default[key] != value:
+                    self[key] = value
                 else:
-                    continue
-            self.Default[key] = value
-
-    def addData(self, Data):
-        for key, value in Data.iteritems():
-            if isinstance(value, dict):
-                try:
-                    self[key].addData(value)
-                except ValueError:
-                    pass
+                    del self[key]
+        except Exception:
+            for key, value in Data.items():
+                if isinstance(value, dict):
+                    try:
+                        self[key].addData(value)
+                    except ValueError:
+                        pass
+                    else:
+                        continue
+                if self.Default[key] != value:
+                    self[key] = value
                 else:
-                    continue
-            if self.Default[key] != value:
-                self[key] = value
-            else:
-                del self[key]
+                    del self[key]
 
 
 def DefaultSettings(Data={}):
@@ -93,7 +135,7 @@ def DefaultSettings(Data={}):
             ('name', 'KodiLib'),
             ('cache path', 'cache'),
             ('network', [
-                ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, urllib2.build_opener().addheaders[0][1])),
+                ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, build_opener().addheaders[0][1])),
             ]),
             ('eventclient', [
                 ('enabled', True),
@@ -272,7 +314,7 @@ class ActionBaseClass(OrderedDict):
                 return False
             else:
                 for header in Headers:
-                    if XMLText(th.next()).strip() != header:
+                    if XMLText(next(th)).strip() != header:
                         return False
                 else:
                     return True
