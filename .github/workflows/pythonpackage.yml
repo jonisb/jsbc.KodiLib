@@ -29,8 +29,9 @@ jobs:
       with:
         path: ~\AppData\Local\pip\Cache # This path is specific to Windows
         # Look to see if there is a cache hit for the corresponding requirements file
-        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        key: ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.architecture }}-${{ hashFiles('requirements.txt') }}
         restore-keys: |
+          ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.architecture }}-
           ${{ runner.os }}-pip-
           ${{ runner.os }}-      
     - name: Install dependencies
