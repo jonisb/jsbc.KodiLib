@@ -30,3 +30,18 @@ class test_SettingsClass(unittest.TestCase):
         import KodiLib as KodiLib
         Settings = KodiLib.SettingsClass()
         assert type(Settings) == KodiLib.SettingsClass
+
+
+class test_eventserver_actions(unittest.TestCase):
+    def test_object_create(self):
+        import KodiLib as KodiLib
+        Settings = KodiLib.DefaultSettings()
+        Settings['server']['network']['ip'] = '192.168.1.102'
+
+        Kodi = KodiLib.kodi(Settings)
+        Kodi.connect()
+
+        actions = Kodi.GetCommands('actions')
+        assert list(actions.keys()) == ['All', '', '3D movie playback/GUI', 'PVR actions', 'Mouse actions', 'Touch', 'Voice', 'Do nothing / error action']
+
+        Kodi.close()
