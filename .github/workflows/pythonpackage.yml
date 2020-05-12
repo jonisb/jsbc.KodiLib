@@ -36,6 +36,7 @@ jobs:
           ${{ runner.os }}-      
     - name: Install dependencies
       run: |
+        pip install wheel
         python -m pip install --no-python-version-warning --upgrade pip
         pip install --no-python-version-warning -r requirements.txt
         pip install git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox
