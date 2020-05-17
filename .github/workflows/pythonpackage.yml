@@ -40,6 +40,7 @@ jobs:
         python -m pip install --no-python-version-warning --upgrade pip
         pip install --no-python-version-warning -r requirements.txt
         pip install git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox
+        pip install git+https://github.com/jonisb/jsbc.compat.git#egg=jsbc.compat
     - name: Lint with flake8
       run: |
         pip install --no-python-version-warning flake8
