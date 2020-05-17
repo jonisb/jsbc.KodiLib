@@ -14,8 +14,8 @@ import xml.dom.minidom
 import logging
 
 import regex
-
-from .pythoncompat import OrderedDict
+from jsbc.compat import *
+from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.Toolbox import SettingsClass
 from . import network
 from .network import DownloadURL, DownloadPage
@@ -25,16 +25,6 @@ logger = logging.getLogger(__name__)
 
 __version__ = '0.0.0'
 __all__ = []
-
-try:
-    basestring
-except Exception:
-    basestring = str
-
-try:
-    unicode
-except Exception:
-    unicode = str
 
 
 def DefaultSettings(Data={}):
