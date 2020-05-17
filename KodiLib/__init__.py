@@ -17,7 +17,8 @@ import regex
 from jsbc.compat import *
 from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.Toolbox import SettingsClass
-from . import network
+from jsbc import network
+#from . import network
 from jsbc.network import DownloadURL, DownloadPage
 #from .network import DownloadURL, DownloadPage
 from . import eventserver
