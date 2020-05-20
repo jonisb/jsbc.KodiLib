@@ -42,6 +42,7 @@ jobs:
         pip install git+https://github.com/jonisb/jsbc.compat.git#egg=jsbc.compat
         pip install git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox
         pip install git+https://github.com/jonisb/jsbc.network.git#egg=jsbc.network
+        pip install --upgrade .\
     - name: Lint with flake8
       run: |
         pip install --no-python-version-warning flake8
