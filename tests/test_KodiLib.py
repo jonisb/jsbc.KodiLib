@@ -24,9 +24,3 @@ class test_Kodi_object(unittest.TestCase):
         import KodiLib as KodiLib
         Kodi = KodiLib.kodi()
         assert Kodi.settings['client']['name'] == 'KodiLib'
-
-class test_SettingsClass(unittest.TestCase):
-    def test_object_create(self):
-        import KodiLib as KodiLib
-        Settings = KodiLib.SettingsClass()
-        assert type(Settings) == KodiLib.SettingsClass
