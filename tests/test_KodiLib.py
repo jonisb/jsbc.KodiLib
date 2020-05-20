@@ -5,22 +5,21 @@ import unittest
 
 class test_Kodi_object(unittest.TestCase):
     def test_object_create(self):
-        import KodiLib as KodiLib
+        from jsbc import KodiLib
         Kodi = KodiLib.kodi()
         assert type(Kodi) == KodiLib.kodi
 
     def test_object_connect(self):
-        import KodiLib as KodiLib
+        from jsbc import KodiLib
         Kodi = KodiLib.kodi()
         assert None == Kodi.connect()
 
     def test_object_close(self):
-        import KodiLib as KodiLib
+        from jsbc import KodiLib
         Kodi = KodiLib.kodi()
         assert None == Kodi.close()
 
     def test_KodiLib_Settings_init(self):
-        #import jsbc.KodiLib as KodiLib
-        import KodiLib as KodiLib
+        from jsbc import KodiLib
         Kodi = KodiLib.kodi()
         assert Kodi.settings['client']['name'] == 'KodiLib'
