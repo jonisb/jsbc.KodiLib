@@ -46,3 +46,18 @@ class test_KodiInfo(unittest.TestCase):
         assert info[18]['metadata'].match(semantic_version.Version('2.1.0'))
         assert info[18]['python'].match(semantic_version.Version('2.1.0'))
         assert info[18]['python'].match(semantic_version.Version('2.26.0'))
+
+
+from jsbc.KodiLib.testing.client import CreateKodiVersionSpecificTests, base as testbase
+
+
+class base(testbase):
+    def test_eventclient_connect(self):
+        from jsbc import KodiLib
+        #Kodi = KodiLib.kodi({'client': {'network': {'jsonrpc': {'enabled': False}}}})
+        Kodi = KodiLib.kodi()
+        Kodi.connect()
+        Kodi.disconnect()
+
+
+CreateKodiVersionSpecificTests(base, globals())
