@@ -1,4 +1,5 @@
 regex
 semantic-version
+bs4
 beautifulsoup4
 BeautifulSoup4
