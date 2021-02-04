@@ -7,7 +7,10 @@ try:
     from bs4 import BeautifulSoup
 except ImportError:
     from BeautifulSoup4 import BeautifulSoup
-import regex
+try:
+    import regex
+except ImportError:
+    import re as regex
 import semantic_version
 
 from jsbc import network

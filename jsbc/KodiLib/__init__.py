@@ -13,8 +13,11 @@ except ImportError:
 import xml.dom.minidom
 import logging
 
-#import regex
-import re as regex
+
+try:
+    import regex
+except ImportError:
+    import re as regex
 from jsbc.compat import *
 from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.Toolbox import SettingsClass
