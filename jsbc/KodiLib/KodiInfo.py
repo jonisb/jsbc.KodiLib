@@ -3,7 +3,10 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import platform
 
-from bs4 import BeautifulSoup
+try:
+    from bs4 import BeautifulSoup
+except ImportError:
+    from beautifulsoup4 import BeautifulSoup
 import regex
 import semantic_version
 
