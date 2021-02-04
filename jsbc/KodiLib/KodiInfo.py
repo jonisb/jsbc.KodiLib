@@ -6,7 +6,7 @@ import platform
 try:
     from bs4 import BeautifulSoup
 except ImportError:
-    from beautifulsoup4 import BeautifulSoup
+    from BeautifulSoup4 import BeautifulSoup
 import regex
 import semantic_version
 
