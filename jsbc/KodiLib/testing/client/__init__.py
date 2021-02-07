@@ -4,11 +4,20 @@ import unittest
 from jsbc.KodiLib.KodiInfo import KodiInfo
 
 
+def StartKodi(cls):
+    #KodiDir = SetupKodi(cls)
+    #cls.KodiProc = RunKodi(KodiDir)
+    #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
+    #import time
+    #time.sleep(5)
+    #cls.Kodi = ConnectKodi()
+    pass
+
+
 class base():
     @classmethod
     def setUpClass(cls):
-        #StartKodi(cls)
-        pass
+        StartKodi(cls)
 
     @classmethod
     def tearDownClass(cls):
