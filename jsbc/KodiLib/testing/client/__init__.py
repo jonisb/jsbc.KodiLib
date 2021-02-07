@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import unittest
+
+from jsbc.KodiLib.KodiInfo import KodiInfo
 
 
 class base():
@@ -22,4 +25,13 @@ class base():
 
 
 def CreateKodiVersionSpecificTests(base, globals=None):
-    pass
+    TestClassDict = {}
+    info = KodiInfo()
+    for ver in info:
+        if 'build' in info[ver]:
+            for bits in info[ver]['build']:
+                classname = str('Test_kodi{ver}_{bits}'.format(ver=ver, bits=bits))
+                TestClassDict[classname] = type(classname,(base, unittest.TestCase), {'Version': ver, 'Bitness': bits, 'KodiInfo': info[ver]})
+    if globals:
+        globals.update(TestClassDict)
+    return TestClassDict
