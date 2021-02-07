@@ -14,6 +14,30 @@ def StartKodi(cls):
     pass
 
 
+def StopKodi(cls):
+    """
+    try:
+        cls.Kodi.jsonrpc.send("Application.Quit")
+        del cls.Kodi
+    except AttributeError:
+        cls.KodiProc.terminate()
+    while True:
+        try:
+            cls.KodiProc.wait(timeout=30)
+            break
+        except TypeError:
+            if not cls.KodiProc.poll():
+                import time
+                time.sleep(1)
+                continue
+            else:
+                break
+        except subprocess.TimeoutExpired:
+            print("\nKill, kill")
+            cls.KodiProc.terminate()
+    """
+
+
 class base():
     @classmethod
     def setUpClass(cls):
@@ -21,8 +45,7 @@ class base():
 
     @classmethod
     def tearDownClass(cls):
-        #StopKodi(cls)
-        pass
+        StopKodi(cls)
 
     #@classmethod
     #def jsonrpc(cls, method, params=[], result=True):
