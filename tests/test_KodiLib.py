@@ -59,5 +59,13 @@ class base(testbase):
         Kodi.connect()
         Kodi.disconnect()
 
+settings = network.Settings
+try:
+    import pathlib
+except ImportError:
+    import pathlib2 as pathlib
+
+CacheDir = pathlib.Path(settings['client']['cache path'])
+CacheDir.mkdir(parents=True, exist_ok=True)
 
 CreateKodiVersionSpecificTests(base, globals())
