@@ -1,17 +1,141 @@
 # -*- coding: utf-8 -*-
+try:
+    import pathlib
+except ImportError:
+    import pathlib2 as pathlib
+try:
+    from urllib.parse import urlparse
+except ImportError:
+    from urlparse import urlparse
+import requests
+import subprocess
+from bs4 import BeautifulSoup
 import unittest
 
+from jsbc.Toolbox import SettingsClass
+from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
 
 
+def DefaultSettings(Data={}):
+    settings = [
+        ('client', [
+            ('name', 'KodiLib.testing'),
+            #('version', __version__),
+            #('cache path', None),
+            #('cache path', '.'),
+        ]),
+        ('servers', {
+            15: {'32bit': "2e0c1831-a77d-4876-4a51-521051cd03c7"},
+            16: {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"},
+            17: {'32bit': "7d6ba765-7f70-677a-ca54-6f86df447af0"},
+            18: {'32bit': "3df74bd5-5965-2fee-5ff1-99eefa0815d7",
+                '64bit': "f18d02c8-ceb9-42ac-6387-35feda7738cd"},
+            19: {'32bit': "a9b25bff-7367-dd3f-2929-f76673682286",
+                '64bit': "4794f82f-9c2f-7343-198a-455e81011be6"},
+        }),
+    ]
+
+    if isinstance(Data, SettingsClass):
+        Settings = Data
+        Settings.addDefault(settings)
+    else:
+        Settings = SettingsClass(settings)
+
+    Settings.addData(Data)
+
+    return Settings
+
+
+def SetupKodi(cls):
+    Version = cls.Version
+    Bitness = cls.Bitness
+    KodiInfo = cls.KodiInfo
+    URL = KodiInfo['build'][Bitness]['URL']
+
+    #KodiDir = SetupDir / f'Kodi{Version}_{Bitness}'
+    KodiDir = SetupDir / 'Kodi{0}_{1}'.format(Version, Bitness)
+    filename = CacheDir / pathlib.Path(urlparse(URL).path).name
+    if not filename.exists():
+        response = requests.get(URL)
+        filename.write_bytes(response.content)
+        del response
+
+    dstdir = KodiDir / 'portable_data'
+    #if not dstdir.exists():
+    if not KodiDir.exists():
+        #SevenZip = ['7z.exe', 'x', '-y', str(filename), f'-o{KodiDir}']
+        SevenZip = ['7z.exe', 'x', '-y', str(filename), '-o{KodiDir}'.format(KodiDir=KodiDir)]
+        #proc = subprocess.run(SevenZip, stdout=subprocess.PIPE)
+        proc = subprocess.call(SevenZip, stdout=subprocess.PIPE)
+
+    dstdir = dstdir / r"userdata\guisettings.xml"
+    if not dstdir.exists():
+        dstdir.parent.mkdir(parents=True, exist_ok=True)
+        guisettings =  """\
+<settings>
+    <general>
+        <settinglevel>3</settinglevel>
+    </general>
+    <services>
+        <upnprenderer>true</upnprenderer>
+        <upnpannounce>false</upnpannounce>
+    </services>
+    <viewstates>
+    </viewstates>
+</settings>
+"""
+        guisettings = BeautifulSoup(guisettings, 'html.parser')
+        if Version < 18:
+            guisettings.settings.general.append(guisettings.new_tag("addonupdates"))
+            guisettings.settings.general.addonupdates.string = str(2)
+            guisettings.settings.services.append(guisettings.new_tag("esallinterfaces"))
+            guisettings.settings.services.esallinterfaces.string = 'true'
+        else:
+            guisettings.settings['version'] = str(2)
+            tag = guisettings.new_tag("setting")
+            tag['id'] = "general.addonupdates"
+            tag.string = str(2)
+            guisettings.settings.append(tag)
+            tag = guisettings.new_tag("setting")
+            tag['id'] = "services.esallinterfaces"
+            tag.string = 'true'
+            guisettings.settings.append(tag)
+            tag = guisettings.new_tag("setting")
+            tag['id'] = "services.upnp"
+            tag.string = 'true'
+            guisettings.settings.append(tag)
+        #dstdir.write_text(str(guisettings), 'utf-8')
+        try:
+            dstdir.write_text(unicode(guisettings), 'utf-8')
+        except NameError:
+            dstdir.write_text(str(guisettings), 'utf-8')
+
+    #dstdir = KodiDir / 'portable_data' / r"userdata\upnpserver.xml"
+    dstdir = KodiDir / 'portable_data' / "userdata/upnpserver.xml"
+    if not dstdir.exists():
+    #      upnpserver =  f"""\
+#  <upnpserver>
+    #  <UUIDRenderer>{UUID[Version][Bitness]}</UUIDRenderer>
+#  </upnpserver>
+#  """
+        upnpserver =  """\
+<upnpserver>
+    <UUIDRenderer>{0}</UUIDRenderer>
+</upnpserver>
+""".format(UUID[Version][Bitness])
+        dstdir.write_text(upnpserver, 'utf-8')
+
+    return KodiDir
+
+
 def StartKodi(cls):
-    #KodiDir = SetupKodi(cls)
+    KodiDir = SetupKodi(cls)
     #cls.KodiProc = RunKodi(KodiDir)
     #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
     #import time
     #time.sleep(5)
     #cls.Kodi = ConnectKodi()
-    pass
 
 
 def StopKodi(cls):
@@ -67,3 +191,11 @@ def CreateKodiVersionSpecificTests(base, globals=None):
     if globals:
         globals.update(TestClassDict)
     return TestClassDict
+
+network.init()
+settings = DefaultSettings(network.Settings)
+UUID = settings['servers']
+CacheDir = pathlib.Path(settings['client']['cache path'])
+CacheDir.mkdir(parents=True, exist_ok=True)
+SetupDir = CacheDir / pathlib.Path(r"TestInstall")
+SetupDir.mkdir(parents=True, exist_ok=True)
