@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function, unicode_literals, division, absolute_import
+
 try:
     import pathlib
 except ImportError:
