@@ -131,16 +131,25 @@ def SetupKodi(cls):
     return KodiDir
 
 
+def RunKodi(KodiDir):
+    try:
+        KodiCmd = [unicode(KodiDir / 'kodi.exe'), '-p']
+    except NameError:
+        KodiCmd = [str(KodiDir / 'kodi.exe'), '-p']
+    return subprocess.Popen(KodiCmd)
+
+
 def StartKodi(cls):
     KodiDir = SetupKodi(cls)
-    #cls.KodiProc = RunKodi(KodiDir)
+    cls.KodiProc = RunKodi(KodiDir)
     #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
-    #import time
-    #time.sleep(5)
+    import time
+    time.sleep(10)
     #cls.Kodi = ConnectKodi()
 
 
 def StopKodi(cls):
+    cls.KodiProc.terminate()
     """
     try:
         cls.Kodi.jsonrpc.send("Application.Quit")
