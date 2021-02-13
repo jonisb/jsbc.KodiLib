@@ -17,6 +17,7 @@ import unittest
 from jsbc.Toolbox import SettingsClass
 from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
+from jsbc import KodiLib
 
 
 def DefaultSettings(Data={}):
@@ -139,18 +140,22 @@ def RunKodi(KodiDir):
     return subprocess.Popen(KodiCmd)
 
 
+def ConnectKodi():
+    Kodi = KodiLib.kodi()
+    Kodi.connect()
+    return Kodi
+
+
 def StartKodi(cls):
     KodiDir = SetupKodi(cls)
     cls.KodiProc = RunKodi(KodiDir)
     #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
     import time
     time.sleep(10)
-    #cls.Kodi = ConnectKodi()
+    cls.Kodi = ConnectKodi()
 
 
 def StopKodi(cls):
-    cls.KodiProc.terminate()
-    """
     try:
         cls.Kodi.jsonrpc.send("Application.Quit")
         del cls.Kodi
@@ -170,7 +175,6 @@ def StopKodi(cls):
         except subprocess.TimeoutExpired:
             print("\nKill, kill")
             cls.KodiProc.terminate()
-    """
 
 
 class base():
