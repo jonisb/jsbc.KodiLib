@@ -14,13 +14,13 @@ import subprocess
 from bs4 import BeautifulSoup
 import unittest
 
-from jsbc.Toolbox import SettingsClass
+from jsbc.Toolbox import SettingsClass, settings
 from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
 from jsbc import KodiLib
 
 
-def DefaultSettings(Data={}):
+def DefaultSettings(Data=settings):
     settings = [
         ('client', [
             ('name', 'KodiLib.testing'),
@@ -207,8 +207,8 @@ def CreateKodiVersionSpecificTests(base, globals=None):
         globals.update(TestClassDict)
     return TestClassDict
 
-network.init()
-settings = DefaultSettings(network.Settings)
+#network.init()
+DefaultSettings()
 UUID = settings['servers']
 CacheDir = pathlib.Path(settings['client']['cache path'])
 CacheDir.mkdir(parents=True, exist_ok=True)

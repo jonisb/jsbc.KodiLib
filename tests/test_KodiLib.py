@@ -23,7 +23,7 @@ class test_Kodi_object(unittest.TestCase):
     def test_KodiLib_Settings_init(self):
         from jsbc import KodiLib
         Kodi = KodiLib.kodi()
-        assert Kodi.settings['client']['name'] == 'KodiLib'
+        assert Kodi.settings['client']['name'] == 'KodiLib.testing'
 
 
 class test_KodiInfo(unittest.TestCase):

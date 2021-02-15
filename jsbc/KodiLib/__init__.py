@@ -20,7 +20,7 @@ except ImportError:
     import re as regex
 from jsbc.compat import *
 from jsbc.compat.OrderedDict import OrderedDict
-from jsbc.Toolbox import SettingsClass
+from jsbc.Toolbox import SettingsClass, settings
 from jsbc import network
 from jsbc.network import DownloadURL, DownloadPage
 from . import eventserver
@@ -31,10 +31,18 @@ __version__ = '0.0.0'
 __all__ = []
 
 
-def DefaultSettings(Data={}):
+def DefaultSettings(Data=settings):
     """ """  # TODO
 
-    Settings = SettingsClass([
+    URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/actions/ActionTranslator.cpp'
+    Pattern = {
+                        'Header': r"static const std::map<(?P<group>Action)Name, ActionID> ActionMappings =",
+                        'Action': r'"(?P<action>.+)"(?:.*? // (?P<description>.*))?',
+                        'End': "};",
+                        'Category': r' // (?P<category>.+)'
+                    }
+
+    settings = [
         ('client', [
             ('name', 'KodiLib'),
             ('cache path', 'cache'),
@@ -67,18 +75,17 @@ def DefaultSettings(Data={}):
             ]),
         ]),
         ('commands', [
-            ('actions', ''),
+            ('actions', "(('Code', {0}, {1}), ('HTML', 'http://kodi.wiki/view/Action_IDs', ['Action', 'Description']))".format(repr(URL), Pattern)),
         ]),
-    ], Data)
+    ]
 
-    URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/actions/ActionTranslator.cpp'
-    Pattern = {
-                        'Header': r"static const std::map<(?P<group>Action)Name, ActionID> ActionMappings =",
-                        'Action': r'"(?P<action>.+)"(?:.*? // (?P<description>.*))?',
-                        'End': "};",
-                        'Category': r' // (?P<category>.+)'
-                    }
-    Settings['commands']['actions'] = "(('Code', {0}, {1}), ('HTML', 'http://kodi.wiki/view/Action_IDs', ['Action', 'Description']))".format(repr(URL), Pattern)
+    if isinstance(Data, SettingsClass):
+        Settings = Data
+        Settings.addDefault(settings)
+    else:
+        Settings = SettingsClass(settings)
+
+    Settings.addData(Data)
 
     return Settings
 
@@ -250,12 +257,12 @@ class ActionBaseClass(OrderedDict):
 
 
 class kodi(object):
-    def __init__(self, settings=DefaultSettings(), callback=None):  # TODO
+    def __init__(self, settings=settings, callback=None):  # TODO
         logger.debug('kodi init.')
         self.settings = settings
-        global Settings
-        Settings = settings
-        network.init(settings)
+        #global Settings
+        #Settings = settings
+        #network.init(settings)
         try:
             os.makedirs(settings['client']['cache path'], exist_ok=True)
         except TypeError:
@@ -286,3 +293,6 @@ class kodi(object):
         self.disconnect()
 
     __del__ = close
+
+
+DefaultSettings()
