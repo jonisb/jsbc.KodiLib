@@ -14,40 +14,28 @@ import subprocess
 from bs4 import BeautifulSoup
 import unittest
 
-from jsbc.Toolbox import SettingsClass, settings
+from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
 from jsbc import KodiLib
 
-
-def DefaultSettings(Data=settings):
-    settings = [
-        ('client', [
-            ('name', 'KodiLib.testing'),
-            #('version', __version__),
-            #('cache path', None),
-            #('cache path', '.'),
-        ]),
-        ('servers', {
-            15: {'32bit': "2e0c1831-a77d-4876-4a51-521051cd03c7"},
-            16: {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"},
-            17: {'32bit': "7d6ba765-7f70-677a-ca54-6f86df447af0"},
-            18: {'32bit': "3df74bd5-5965-2fee-5ff1-99eefa0815d7",
-                '64bit': "f18d02c8-ceb9-42ac-6387-35feda7738cd"},
-            19: {'32bit': "a9b25bff-7367-dd3f-2929-f76673682286",
-                '64bit': "4794f82f-9c2f-7343-198a-455e81011be6"},
-        }),
-    ]
-
-    if isinstance(Data, SettingsClass):
-        Settings = Data
-        Settings.addDefault(settings)
-    else:
-        Settings = SettingsClass(settings)
-
-    Settings.addData(Data)
-
-    return Settings
+settingsDefaults = [
+    ('client', [
+        ('name', 'KodiLib.testing'),
+        #('version', __version__),
+        #('cache path', None),
+        #('cache path', '.'),
+    ]),
+    ('servers', {
+        15: {'32bit': "2e0c1831-a77d-4876-4a51-521051cd03c7"},
+        16: {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"},
+        17: {'32bit': "7d6ba765-7f70-677a-ca54-6f86df447af0"},
+        18: {'32bit': "3df74bd5-5965-2fee-5ff1-99eefa0815d7",
+            '64bit': "f18d02c8-ceb9-42ac-6387-35feda7738cd"},
+        19: {'32bit': "a9b25bff-7367-dd3f-2929-f76673682286",
+            '64bit': "4794f82f-9c2f-7343-198a-455e81011be6"},
+    }),
+]
 
 
 def SetupKodi(cls):
@@ -207,8 +195,7 @@ def CreateKodiVersionSpecificTests(base, globals=None):
         globals.update(TestClassDict)
     return TestClassDict
 
-#network.init()
-DefaultSettings()
+DefaultSettings(settingsDefaults)
 UUID = settings['servers']
 CacheDir = pathlib.Path(settings['client']['cache path'])
 CacheDir.mkdir(parents=True, exist_ok=True)
