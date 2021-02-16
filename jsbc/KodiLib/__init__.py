@@ -20,7 +20,7 @@ except ImportError:
     import re as regex
 from jsbc.compat import *
 from jsbc.compat.OrderedDict import OrderedDict
-from jsbc.Toolbox import SettingsClass, settings
+from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.network import DownloadURL, DownloadPage
 from . import eventserver
@@ -31,63 +31,50 @@ __version__ = '0.0.0'
 __all__ = []
 
 
-def DefaultSettings(Data=settings):
-    """ """  # TODO
+URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/actions/ActionTranslator.cpp'
+Pattern = {
+                    'Header': r"static const std::map<(?P<group>Action)Name, ActionID> ActionMappings =",
+                    'Action': r'"(?P<action>.+)"(?:.*? // (?P<description>.*))?',
+                    'End': "};",
+                    'Category': r' // (?P<category>.+)'
+                }
 
-    URL = 'https://raw.githubusercontent.com/xbmc/xbmc/master/xbmc/input/actions/ActionTranslator.cpp'
-    Pattern = {
-                        'Header': r"static const std::map<(?P<group>Action)Name, ActionID> ActionMappings =",
-                        'Action': r'"(?P<action>.+)"(?:.*? // (?P<description>.*))?',
-                        'End': "};",
-                        'Category': r' // (?P<category>.+)'
-                    }
-
-    settings = [
-        ('client', [
-            ('name', 'KodiLib'),
-            ('cache path', 'cache'),
-            ('network', [
-                ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, build_opener().addheaders[0][1])),
-            ]),
-            ('eventclient', [
-                ('enabled', True),
-            ]),
-            ('icon', [
-                ('url', None),
-                ('type', None),
-            ]),
+settingsDefaults = [
+    ('client', [
+        ('name', 'KodiLib'),
+        ('cache path', 'cache'),
+        ('network', [
+            ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, build_opener().addheaders[0][1])),
         ]),
-        ('server', [
-            ('friendlyName', 'Kodi'),
-            ('name', 'Kodi'),
-            ('version', ''),
-            ('network', [
-                ('ip', 'localhost'),
-                ('udp', {
-                    'port': 9777,
-                }),
-                ('http', {
-                    'port': 8080,
-                }),
-                ('upnp', {
-                    'id': '',
-                }),
-            ]),
+        ('eventclient', [
+            ('enabled', True),
         ]),
-        ('commands', [
-            ('actions', "(('Code', {0}, {1}), ('HTML', 'http://kodi.wiki/view/Action_IDs', ['Action', 'Description']))".format(repr(URL), Pattern)),
+        ('icon', [
+            ('url', None),
+            ('type', None),
         ]),
-    ]
-
-    if isinstance(Data, SettingsClass):
-        Settings = Data
-        Settings.addDefault(settings)
-    else:
-        Settings = SettingsClass(settings)
-
-    Settings.addData(Data)
-
-    return Settings
+    ]),
+    ('server', [
+        ('friendlyName', 'Kodi'),
+        ('name', 'Kodi'),
+        ('version', ''),
+        ('network', [
+            ('ip', 'localhost'),
+            ('udp', {
+                'port': 9777,
+            }),
+            ('http', {
+                'port': 8080,
+            }),
+            ('upnp', {
+                'id': '',
+            }),
+        ]),
+    ]),
+    ('commands', [
+        ('actions', "(('Code', {0}, {1}), ('HTML', 'http://kodi.wiki/view/Action_IDs', ['Action', 'Description']))".format(repr(URL), Pattern)),
+    ]),
+]
 
 
 def XMLText(Node):
@@ -260,9 +247,6 @@ class kodi(object):
     def __init__(self, settings=settings, callback=None):  # TODO
         logger.debug('kodi init.')
         self.settings = settings
-        #global Settings
-        #Settings = settings
-        #network.init(settings)
         try:
             os.makedirs(settings['client']['cache path'], exist_ok=True)
         except TypeError:
@@ -295,4 +279,4 @@ class kodi(object):
     __del__ = close
 
 
-DefaultSettings()
+DefaultSettings(settingsDefaults)
