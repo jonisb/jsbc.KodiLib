@@ -33,7 +33,14 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.architecture }}-
           ${{ runner.os }}-pip-
-          ${{ runner.os }}-      
+          ${{ runner.os }}-
+    - name: Cache Kodi15_32bit
+      uses: actions/cache@v2
+      with:
+        path: |
+          cache\kodi-15.2-Isengard.exe
+          cache\TestInstall\Kodi15_32bit
+        key: ${{ runner.os }}-cache-kodi-15.2-Isengard.exe
     - name: Install dependencies
       run: |
         pip install wheel
