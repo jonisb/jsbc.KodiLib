@@ -39,15 +39,31 @@ jobs:
       with:
         path: |
           cache\kodi-15.2-Isengard.exe
-          cache\TestInstall\Kodi15_32bit
-        key: ${{ runner.os }}-cache-kodi-15.2-Isengard.exe
+        key: ${{ runner.os }}-cache-kodi-15.2-Isengard
     - name: Cache Kodi16_32bit
       uses: actions/cache@v2
       with:
         path: |
           cache\kodi-16.1-Jarvis.exe
-          cache\TestInstall\Kodi16_32bit
-        key: ${{ runner.os }}-cache-kodi-16.1-Jarvis.exe
+        key: ${{ runner.os }}-cache-kodi-16.1-Jarvis
+    - name: Cache Kodi17.6_32bit
+      uses: actions/cache@v2
+      with:
+        path: |
+          cache\kodi-17.6-Krypton-x86.exe
+        key: ${{ runner.os }}-cache-kodi-17.6-Krypton-x86
+    - name: Cache Kodi18.9_32bit
+      uses: actions/cache@v2
+      with:
+        path: |
+          cache\kodi-18.9-Leia-x86.exe
+        key: ${{ runner.os }}-cache-kodi-18.9-Leia-x86
+    - name: Cache Kodi18.9_64bit
+      uses: actions/cache@v2
+      with:
+        path: |
+          cache\kodi-18.9-Leia-x64.exe
+        key: ${{ runner.os }}-cache-kodi-18.9-Leia-x64
     - name: Install dependencies
       run: |
         pip install wheel
