@@ -26,6 +26,21 @@ settingsDefaults = [
         #('cache path', None),
         #('cache path', '.'),
     ]),
+    ('servers', [
+        (int, [
+        ]),
+    ]),
+]
+
+
+"""
+settingsDefaults = [
+    ('client', [
+        ('name', 'KodiLib.testing'),
+        #('version', __version__),
+        #('cache path', None),
+        #('cache path', '.'),
+    ]),
     ('servers', {
         15: {'32bit': "2e0c1831-a77d-4876-4a51-521051cd03c7"},
         16: {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"},
@@ -34,8 +49,23 @@ settingsDefaults = [
             '64bit': "f18d02c8-ceb9-42ac-6387-35feda7738cd"},
         19: {'32bit': "a9b25bff-7367-dd3f-2929-f76673682286",
             '64bit': "4794f82f-9c2f-7343-198a-455e81011be6"},
+        20: {'32bit': "60cead10-0d05-624e-22e5-e8984c19a4f5",
+            '64bit': "d21c3a54-52b3-18d3-5d6c-aae941c6757d"},
     }),
 ]
+"""
+
+import json
+def encode_Path(obj):
+    if isinstance(obj, pathlib.Path):
+        return str(obj)
+    raise TypeError(repr(obj) + " is not JSON serializable")
+
+def decode_Path(dct):
+    if 'cache path' in dct:
+        dct['cache path'] = pathlib.Path(dct['cache path'])
+        return dct
+    return dct
 
 
 def SetupKodi(cls):
@@ -110,6 +140,19 @@ def SetupKodi(cls):
     #  <UUIDRenderer>{UUID[Version][Bitness]}</UUIDRenderer>
 #  </upnpserver>
 #  """
+        try:
+            UUID[Version]
+        except KeyError:
+            UUID[Version] = {}
+
+        try:
+            UUID[Version][Bitness]
+        except KeyError:
+            import uuid
+            UUID[Version][Bitness] = str(uuid.uuid4())
+            settings['servers'] = UUID[Version][Bitness]
+            json.dump(settings.export(), pathlib.Path('settings.json').open('w'), indent=4, default=encode_Path)
+
         upnpserver =  """\
 <upnpserver>
     <UUIDRenderer>{0}</UUIDRenderer>
@@ -195,7 +238,12 @@ def CreateKodiVersionSpecificTests(base, globals=None):
         globals.update(TestClassDict)
     return TestClassDict
 
-DefaultSettings(settingsDefaults)
+
+try:
+    DefaultSettings(settingsDefaults, json.load(pathlib.Path('settings.json').open('r'), object_hook=decode_Path))
+except (FileNotFoundError, IOError):
+    DefaultSettings(settingsDefaults)
+
 UUID = settings['servers']
 CacheDir = pathlib.Path(settings['client']['cache path'])
 CacheDir.mkdir(parents=True, exist_ok=True)
