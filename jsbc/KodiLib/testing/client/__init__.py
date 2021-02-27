@@ -6,7 +6,7 @@ import subprocess
 from bs4 import BeautifulSoup
 import unittest
 
-from jsbc.compat import *
+#from jsbc.compat import *
 from jsbc.compat.pathlib import pathlib
 from jsbc.compat.urllib.urlparse import urlparse
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
