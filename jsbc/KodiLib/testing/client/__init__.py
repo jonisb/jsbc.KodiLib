@@ -145,8 +145,8 @@ def SetupKodi(cls):
         except KeyError:
             import uuid
             UUID[Version][Bitness] = str(uuid.uuid4())
-            settings['servers'] = UUID[Version][Bitness]
-            json.dump(settings.export(), pathlib.Path('settings.json').open('w'), indent=4, default=encode_Path)
+            #settings['servers'] = UUID[Version][Bitness]
+            #json.dump(settings.export(), pathlib.Path('settings.json').open('w'), indent=4, default=encode_Path)
 
         upnpserver =  """\
 <upnpserver>
@@ -234,10 +234,12 @@ def CreateKodiVersionSpecificTests(base, globals=None):
     return TestClassDict
 
 
+"""
 try:
     DefaultSettings(settingsDefaults, json.load(pathlib.Path('settings.json').open('r'), object_hook=decode_Path))
 except (FileNotFoundError, IOError):
-    DefaultSettings(settingsDefaults)
+"""
+DefaultSettings(settingsDefaults)
 
 UUID = settings['servers']
 CacheDir = pathlib.Path(settings['client']['cache path'])
