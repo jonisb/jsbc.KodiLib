@@ -242,6 +242,16 @@ except (FileNotFoundError, IOError):
 DefaultSettings(settingsDefaults)
 
 UUID = settings['servers']
+UUID[15] = {'32bit': "2e0c1831-a77d-4876-4a51-521051cd03c7"}
+UUID[16] = {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"}
+UUID[17] = {'32bit': "7d6ba765-7f70-677a-ca54-6f86df447af0"}
+UUID[18] = {'32bit': "3df74bd5-5965-2fee-5ff1-99eefa0815d7",
+            '64bit': "f18d02c8-ceb9-42ac-6387-35feda7738cd"}
+UUID[19] = {'32bit': "a9b25bff-7367-dd3f-2929-f76673682286",
+            '64bit': "4794f82f-9c2f-7343-198a-455e81011be6"}
+UUID[20] = {'32bit': "60cead10-0d05-624e-22e5-e8984c19a4f5",
+            '64bit': "d21c3a54-52b3-18d3-5d6c-aae941c6757d"}
+
 CacheDir = pathlib.Path(settings['client']['cache path'])
 CacheDir.mkdir(parents=True, exist_ok=True)
 SetupDir = CacheDir / pathlib.Path(r"TestInstall")
