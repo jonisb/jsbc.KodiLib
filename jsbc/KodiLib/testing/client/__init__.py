@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-try:
-    from urllib.parse import urlparse
-except ImportError:
-    from urlparse import urlparse
 import requests
 import subprocess
 from bs4 import BeautifulSoup
 import unittest
 
 from jsbc.compat.pathlib import pathlib
+from jsbc.compat.urllib.urlparse import urlparse
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
