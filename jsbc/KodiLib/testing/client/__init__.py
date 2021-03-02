@@ -2,10 +2,6 @@
 from __future__ import print_function, unicode_literals, division, absolute_import
 
 try:
-    import pathlib
-except ImportError:
-    import pathlib2 as pathlib
-try:
     from urllib.parse import urlparse
 except ImportError:
     from urlparse import urlparse
@@ -14,6 +10,7 @@ import subprocess
 from bs4 import BeautifulSoup
 import unittest
 
+from jsbc.compat.pathlib import pathlib
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
