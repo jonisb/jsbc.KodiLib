@@ -4,7 +4,6 @@ KodiLib:
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
 
-import os
 import ast
 import xml.dom.minidom
 import logging
@@ -13,7 +12,7 @@ try:
     import regex
 except ImportError:
     import re as regex
-from jsbc.compat import *
+from jsbc.compat.python3 import *
 from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.compat.urllib.build_opener import build_opener
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
@@ -243,7 +242,7 @@ class kodi(object):
         logger.debug('kodi init.')
         self.settings = settings
         try:
-            os.makedirs(settings['client']['cache path'], exist_ok=True)
+            settings['client']['cache path'].mkdir(parents=True, exist_ok=True)
         except TypeError:
             try:
                 settings['client']['cache path'].mkdir(parents=True)
