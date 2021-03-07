@@ -42,7 +42,6 @@ Pattern = {
 settingsDefaults = [
     ('client', [
         ('name', 'KodiLib'),
-        ('cache path', 'cache'),
         ('network', [
             ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, build_opener().addheaders[0][1])),
         ]),
