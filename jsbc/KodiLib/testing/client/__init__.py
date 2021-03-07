@@ -204,7 +204,7 @@ try:
 except FileNotFoundError:
     pass
 UUID = settings['servers']
-CacheDir = pathlib.Path(settings['client']['cache path'])
-CacheDir.mkdir(parents=True, exist_ok=True)
-SetupDir = CacheDir / pathlib.Path(r"TestInstall")
+CacheDir = settings['client']['cache path']
+#CacheDir.mkdir(parents=True, exist_ok=True)
+SetupDir = CacheDir / "TestInstall"
 SetupDir.mkdir(parents=True, exist_ok=True)
