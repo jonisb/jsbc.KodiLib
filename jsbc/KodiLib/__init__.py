@@ -4,6 +4,7 @@ KodiLib:
 """
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import os
 import ast
 import xml.dom.minidom
 import logging
@@ -15,6 +16,7 @@ except ImportError:
 from jsbc.compat.python3 import *
 from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.compat.urllib.build_opener import build_opener
+from jsbc.compat.pathlib import pathlib
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.network import DownloadURL, DownloadPage
@@ -242,12 +244,12 @@ class kodi(object):
         logger.debug('kodi init.')
         self.settings = settings
         try:
-            settings['client']['cache path'].mkdir(parents=True, exist_ok=True)
+            CacheDir.mkdir(parents=True, exist_ok=True)
         except TypeError:
             try:
-                settings['client']['cache path'].mkdir(parents=True)
+                CacheDir.mkdir(parents=True)
             except WindowsError:
-                if not settings['client']['cache path'].exists():
+                if not CacheDir.exists():
                     raise
         if self.settings['client']['eventclient']['enabled']:
             self.eventclient = eventserver.eventclient(settings)
@@ -274,3 +276,4 @@ class kodi(object):
 
 
 DefaultSettings(settingsDefaults)
+CacheDir = pathlib.Path(os.path.expandvars(settings['client']['cache path']))
