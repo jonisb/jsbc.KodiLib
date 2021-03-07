@@ -13,7 +13,6 @@ except ImportError:
 import xml.dom.minidom
 import logging
 
-
 try:
     import regex
 except ImportError:
@@ -250,9 +249,9 @@ class kodi(object):
             os.makedirs(settings['client']['cache path'], exist_ok=True)
         except TypeError:
             try:
-                os.makedirs(settings['client']['cache path'])  # if "exist_ok" option is not supported
+                settings['client']['cache path'].mkdir(parents=True)
             except WindowsError:
-                if not os.path.exists(settings['client']['cache path']):
+                if not settings['client']['cache path'].exists():
                     raise
         if self.settings['client']['eventclient']['enabled']:
             self.eventclient = eventserver.eventclient(settings)
