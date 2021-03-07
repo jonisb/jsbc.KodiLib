@@ -6,13 +6,8 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import os
 import ast
-try:
-    from urllib.request import build_opener
-except ImportError:
-    from urllib2 import build_opener
 import xml.dom.minidom
 import logging
-
 
 try:
     import regex
@@ -20,6 +15,7 @@ except ImportError:
     import re as regex
 from jsbc.compat import *
 from jsbc.compat.OrderedDict import OrderedDict
+from jsbc.compat.urllib.build_opener import build_opener
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.network import DownloadURL, DownloadPage
@@ -42,7 +38,6 @@ Pattern = {
 settingsDefaults = [
     ('client', [
         ('name', 'KodiLib'),
-        ('cache path', 'cache'),
         ('network', [
             ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, build_opener().addheaders[0][1])),
         ]),
@@ -251,9 +246,9 @@ class kodi(object):
             os.makedirs(settings['client']['cache path'], exist_ok=True)
         except TypeError:
             try:
-                os.makedirs(settings['client']['cache path'])  # if "exist_ok" option is not supported
+                settings['client']['cache path'].mkdir(parents=True)
             except WindowsError:
-                if not os.path.exists(settings['client']['cache path']):
+                if not settings['client']['cache path'].exists():
                     raise
         if self.settings['client']['eventclient']['enabled']:
             self.eventclient = eventserver.eventclient(settings)
