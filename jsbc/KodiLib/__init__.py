@@ -6,10 +6,6 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import os
 import ast
-try:
-    from urllib.request import build_opener
-except ImportError:
-    from urllib2 import build_opener
 import xml.dom.minidom
 import logging
 
@@ -19,6 +15,7 @@ except ImportError:
     import re as regex
 from jsbc.compat import *
 from jsbc.compat.OrderedDict import OrderedDict
+from jsbc.compat.urllib.build_opener import build_opener
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.network import DownloadURL, DownloadPage
