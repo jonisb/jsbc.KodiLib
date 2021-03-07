@@ -6,6 +6,7 @@ import subprocess
 from bs4 import BeautifulSoup
 import unittest
 
+from jsbc.compat.python3 import *
 from jsbc.compat.pathlib import pathlib
 from jsbc.compat.urllib.urlparse import urlparse
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
@@ -20,17 +21,9 @@ settingsDefaults = [
         #('cache path', None),
         #('cache path', '.'),
     ]),
-    ('servers', {
-        '15': {'32bit': "2e0c1831-a77d-4876-4a51-521051cd03c7"},
-        '16': {'32bit': "0c91ea09-d44a-bc0c-f4da-75e87388e178"},
-        '17': {'32bit': "7d6ba765-7f70-677a-ca54-6f86df447af0"},
-        '18': {'32bit': "3df74bd5-5965-2fee-5ff1-99eefa0815d7",
-            '64bit': "f18d02c8-ceb9-42ac-6387-35feda7738cd"},
-        '19': {'32bit': "a9b25bff-7367-dd3f-2929-f76673682286",
-            '64bit': "4794f82f-9c2f-7343-198a-455e81011be6"},
-        '20': {'32bit': "60cead10-0d05-624e-22e5-e8984c19a4f5",
-            '64bit': "d21c3a54-52b3-18d3-5d6c-aae941c6757d"},
-    }),
+    ('servers', [
+        (str, []),
+    ]),
 ]
 
 
@@ -106,6 +99,17 @@ def SetupKodi(cls):
     #  <UUIDRenderer>{UUID[Version][Bitness]}</UUIDRenderer>
 #  </upnpserver>
 #  """
+        try:
+            UUID[str(Version)]
+        except KeyError:
+            UUID[str(Version)] = {}
+
+        try:
+            UUID[str(Version)][Bitness]
+        except KeyError:
+            import uuid
+            UUID[str(Version)][Bitness] = str(uuid.uuid4())
+            settings.save()
         upnpserver =  """\
 <upnpserver>
     <UUIDRenderer>{0}</UUIDRenderer>
@@ -186,12 +190,19 @@ def CreateKodiVersionSpecificTests(base, globals=None):
         if 'build' in info[ver]:
             for bits in info[ver]['build']:
                 classname = str('Test_kodi{ver}_{bits}'.format(ver=ver, bits=bits))
-                TestClassDict[classname] = type(classname,(base, unittest.TestCase), {'Version': ver, 'Bitness': bits, 'KodiInfo': info[ver]})
+                try:
+                    TestClassDict[classname] = type(classname,(base, unittest.TestCase), {'Version': ver, 'Bitness': bits, 'KodiInfo': info[ver]})
+                except TypeError:
+                    TestClassDict[classname] = type(bytes(classname),(base, unittest.TestCase), {'Version': ver, 'Bitness': bits, 'KodiInfo': info[ver]})
     if globals:
         globals.update(TestClassDict)
     return TestClassDict
 
 DefaultSettings(settingsDefaults)
+try:
+    settings.load()
+except FileNotFoundError:
+    pass
 UUID = settings['servers']
 CacheDir = pathlib.Path(settings['client']['cache path'])
 CacheDir.mkdir(parents=True, exist_ok=True)
