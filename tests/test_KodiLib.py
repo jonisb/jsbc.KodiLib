@@ -2,6 +2,9 @@
 from __future__ import print_function, unicode_literals, division, absolute_import
 
 import unittest
+import logging
+logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class test_Kodi_object(unittest.TestCase):
