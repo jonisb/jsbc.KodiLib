@@ -18,9 +18,6 @@ jobs:
         python-version: [2.7, 3.8]
         architecture: ['x64', 'x86']
 
-    env:
-      TEMP: ${env:TEMP}
-      
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -37,8 +34,8 @@ jobs:
           ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.architecture }}-
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
-    - name: Echo
-      run: echo %TEMP%
+		- name: Echo
+      run: echo ${env:TEMP}
     - name: Cache Kodi15_32bit
       uses: actions/cache@v2
       with:
