@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import print_function, unicode_literals, division, absolute_import
 
+import os
 import requests
 import subprocess
 from bs4 import BeautifulSoup
@@ -204,7 +205,7 @@ try:
 except FileNotFoundError:
     pass
 UUID = settings['servers']
-CacheDir = settings['client']['cache path']
+CacheDir = pathlib.Path(os.path.expandvars(str(settings['client']['cache path'])))
 #CacheDir.mkdir(parents=True, exist_ok=True)
 SetupDir = CacheDir / "TestInstall"
 SetupDir.mkdir(parents=True, exist_ok=True)
