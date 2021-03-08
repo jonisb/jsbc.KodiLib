@@ -20,14 +20,6 @@ jobs:
 
     env:
       TEMP: ${env.TEMP}
-    env:
-      TEMP: env:TEMP
-    env:
-      TEMP: env.TEMP
-    env:
-      TEMP: ${ env:TEMP }
-    env:
-      TEMP: ${{env:TEMP}}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
