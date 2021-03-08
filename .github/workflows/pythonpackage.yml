@@ -52,7 +52,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ${{env:TEMP}}\jsbc.cache\kodi-17.6-Krypton-x86.exe
+          ${env:TEMP}\jsbc.cache\kodi-17.6-Krypton-x86.exe
         key: ${{ runner.os }}-cache-kodi-17.6-Krypton-x86
     - name: Cache Kodi18.9_32bit
       uses: actions/cache@v2
