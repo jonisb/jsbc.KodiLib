@@ -34,6 +34,8 @@ jobs:
           ${{ runner.os }}-pip-${{ matrix.python-version }}-${{ matrix.architecture }}-
           ${{ runner.os }}-pip-
           ${{ runner.os }}-
+    - env:
+      TEMP: ${env:TEMP}
     - name: Cache Kodi15_32bit
       uses: actions/cache@v2
       with:
@@ -44,25 +46,25 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-16.1-Jarvis.exe
+          ${env.TEMP}\jsbc.cache\kodi-16.1-Jarvis.exe
         key: ${{ runner.os }}-cache-kodi-16.1-Jarvis
     - name: Cache Kodi17.6_32bit
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-17.6-Krypton-x86.exe
+          ${{env:TEMP}}\jsbc.cache\kodi-17.6-Krypton-x86.exe
         key: ${{ runner.os }}-cache-kodi-17.6-Krypton-x86
     - name: Cache Kodi18.9_32bit
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-18.9-Leia-x86.exe
+          ${{env.TEMP}}\jsbc.cache\kodi-18.9-Leia-x86.exe
         key: ${{ runner.os }}-cache-kodi-18.9-Leia-x86
     - name: Cache Kodi18.9_64bit
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-18.9-Leia-x64.exe
+          ${ env:TEMP }\jsbc.cache\kodi-18.9-Leia-x64.exe
         key: ${{ runner.os }}-cache-kodi-18.9-Leia-x64
     - name: Cache Kodi19.0_32bit
       uses: actions/cache@v2
