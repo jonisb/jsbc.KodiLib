@@ -19,7 +19,7 @@ jobs:
         architecture: ['x64', 'x86']
 
     env:
-      TEMP: ${env.TEMP}
+      TEMP: ${env:TEMP}
       
     steps:
     - uses: actions/checkout@v2
