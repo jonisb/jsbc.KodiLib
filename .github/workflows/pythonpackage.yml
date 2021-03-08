@@ -40,7 +40,7 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          %TEMP%\jsbc.cache\kodi-15.2-Isengard.exe
+          ${env.TEMP}\jsbc.cache\kodi-15.2-Isengard.exe
         key: ${{ runner.os }}-cache-kodi-15.2-Isengard
     - name: Cache Kodi16_32bit
       uses: actions/cache@v2
@@ -52,31 +52,31 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-17.6-Krypton-x86.exe
+          ${env.TEMP}\jsbc.cache\kodi-17.6-Krypton-x86.exe
         key: ${{ runner.os }}-cache-kodi-17.6-Krypton-x86
     - name: Cache Kodi18.9_32bit
       uses: actions/cache@v2
       with:
         path: |
-          ${{env.TEMP}}\jsbc.cache\kodi-18.9-Leia-x86.exe
+          ${env.TEMP}\jsbc.cache\kodi-18.9-Leia-x86.exe
         key: ${{ runner.os }}-cache-kodi-18.9-Leia-x86
     - name: Cache Kodi18.9_64bit
       uses: actions/cache@v2
       with:
         path: |
-          ${ env:TEMP }\jsbc.cache\kodi-18.9-Leia-x64.exe
+          ${env.TEMP}\jsbc.cache\kodi-18.9-Leia-x64.exe
         key: ${{ runner.os }}-cache-kodi-18.9-Leia-x64
     - name: Cache Kodi19.0_32bit
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-19.0-Matrix-x86.exe
+          ${env.TEMP}\jsbc.cache\kodi-19.0-Matrix-x86.exe
         key: ${{ runner.os }}-cache-kodi-19.0-Matrix-x86
     - name: Cache Kodi19.0_64bit
       uses: actions/cache@v2
       with:
         path: |
-          ${env:TEMP}\jsbc.cache\kodi-19.0-Matrix-x64.exe
+          ${env.TEMP}\jsbc.cache\kodi-19.0-Matrix-x64.exe
         key: ${{ runner.os }}-cache-kodi-19.0-Matrix-x64
     - name: Install dependencies
       run: |
