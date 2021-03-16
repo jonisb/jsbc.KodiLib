@@ -3,6 +3,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 
 import socket
 from threading import Thread, Event, Lock
+from jsbc.compat.python3 import *
 try:
     from queue import Queue, Empty
 except ModuleNotFoundError:
@@ -10,7 +11,6 @@ except ModuleNotFoundError:
 import json
 import logging
 logger = logging.getLogger(__name__)
-from jsbc.compat.python3 import *
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc.Toolbox import DefaultSettings as ToolboxSettings
 from jsbc.KodiLib import settingsDefaults as KodiLibDefaults
