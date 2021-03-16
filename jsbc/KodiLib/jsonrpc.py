@@ -14,7 +14,10 @@ from jsbc.compat.python3 import *
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc.Toolbox import DefaultSettings as ToolboxSettings
 from jsbc.KodiLib import settingsDefaults as KodiLibDefaults
-import regex
+try:
+    import regex
+except ImportError:
+    import re as regex
 
 settingsDefaults = [
     ('client', [
