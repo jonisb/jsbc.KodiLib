@@ -95,4 +95,4 @@ jobs:
     - name: Test with pytest
       run: |
         pip install --no-python-version-warning pytest
-        python -m pytest
+        python -m pytest -x
