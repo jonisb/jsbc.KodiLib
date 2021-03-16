@@ -10,6 +10,7 @@ except ModuleNotFoundError:
 import json
 import logging
 logger = logging.getLogger(__name__)
+from jsbc.compat.python3 import *
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc.Toolbox import DefaultSettings as ToolboxSettings
 from jsbc.KodiLib import settingsDefaults as KodiLibDefaults
