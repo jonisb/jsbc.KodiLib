@@ -5,6 +5,7 @@ import os
 import requests
 import subprocess
 from bs4 import BeautifulSoup
+import logging
 import unittest
 
 from jsbc.compat.python3 import *
@@ -14,6 +15,7 @@ from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.KodiLib.KodiInfo import KodiInfo
 from jsbc import KodiLib
+logger = logging.getLogger(__name__)
 
 settingsDefaults = [
     ('client', [
@@ -29,6 +31,7 @@ settingsDefaults = [
 
 
 def SetupKodi(cls):
+    logger.debug("SetupKodi starting")
     Version = cls.Version
     Bitness = cls.Bitness
     KodiInfo = cls.KodiInfo
@@ -49,6 +52,7 @@ def SetupKodi(cls):
         SevenZip = ['7z.exe', 'x', '-y', str(filename), '-o{KodiDir}'.format(KodiDir=KodiDir)]
         #proc = subprocess.run(SevenZip, stdout=subprocess.PIPE)
         proc = subprocess.call(SevenZip, stdout=subprocess.PIPE)
+    logger.debug("SetupKodi KodiDir.exists() = %s", KodiDir.exists())
 
     dstdir = dstdir / r"userdata\guisettings.xml"
     if not dstdir.exists():
@@ -118,6 +122,7 @@ def SetupKodi(cls):
 """.format(UUID[str(Version)][Bitness])
         dstdir.write_text(upnpserver, 'utf-8')
 
+    logger.debug("SetupKodi ending")
     return KodiDir
 
 
@@ -130,18 +135,23 @@ def RunKodi(KodiDir):
 
 
 def ConnectKodi():
+    logger.debug("ConnectKodi starting")
     Kodi = KodiLib.kodi()
     Kodi.connect()
+    logger.debug("ConnectKodi ending")
     return Kodi
 
 
 def StartKodi(cls):
+    logger.debug("StartKodi starting")
     KodiDir = SetupKodi(cls)
     cls.KodiProc = RunKodi(KodiDir)
+    logger.debug("RunKodi: %s", cls.KodiProc.poll())
     #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
     import time
     time.sleep(10)
     cls.Kodi = ConnectKodi()
+    logger.debug("StartKodi ending")
 
 
 def StopKodi(cls):
