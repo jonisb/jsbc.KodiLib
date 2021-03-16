@@ -95,4 +95,9 @@ jobs:
     - name: Test with pytest
       run: |
         pip install --no-python-version-warning pytest
-        python -m pytest -x
+        python -m pytest
+    - name: debug.log
+      uses: actions/upload-artifact@v2
+      with:
+        name: debug.log
+        path: debug.log
