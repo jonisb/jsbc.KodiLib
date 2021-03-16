@@ -52,6 +52,24 @@ from jsbc.KodiLib.testing.client import CreateKodiVersionSpecificTests, base as 
 
 
 class base(testbase):
+    def test_jsonrpc_connect(self):
+        from jsbc.KodiLib.jsonrpc import jsonrpc, DefaultSettings
+
+        settings = DefaultSettings()
+        settings['client']['network']['jsonrpc']['enabled'] = True
+
+        with jsonrpc() as Kodi:
+            assert True
+
+    def test_jsonrpc_ping(self):
+        from jsbc.KodiLib.jsonrpc import jsonrpc, DefaultSettings
+
+        settings = DefaultSettings()
+        settings['client']['network']['jsonrpc']['enabled'] = True
+
+        with jsonrpc() as Kodi:
+            assert Kodi.send('JSONRPC.Ping')['result'] == 'pong'
+
     def test_eventclient_connect(self):
         from jsbc import KodiLib
         #Kodi = KodiLib.kodi({'client': {'network': {'jsonrpc': {'enabled': False}}}})
