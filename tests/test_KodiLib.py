@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 import unittest
 import logging
 logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
+from jsbc.KodiLib.testing.client import CreateKodiVersionSpecificTests, base as testbase
 logger = logging.getLogger(__name__)
 
 
