@@ -12,8 +12,8 @@ from jsbc.compat.pathlib import pathlib
 from jsbc.compat.urllib.urlparse import urlparse
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
-from jsbc.KodiLib.KodiInfo import KodiInfo
-from jsbc import KodiLib
+from ...KodiInfo import KodiInfo
+from .... import KodiLib
 
 settingsDefaults = [
     ('client', [
@@ -139,6 +139,7 @@ def StartKodi(cls):
     KodiDir = SetupKodi(cls)
     cls.KodiProc = RunKodi(KodiDir)
     #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
+    settings['client']['network']['eventclient']['enabled'] = True
     import time
     time.sleep(10)
     cls.Kodi = ConnectKodi()
