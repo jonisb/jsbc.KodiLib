@@ -14,6 +14,31 @@ import time
 from jsbc.network import *
 #from .network import *
 
+from jsbc.Toolbox import DefaultSettings, settings
+
+settingsDefaults = [
+    ('client', [
+        ('name', 'eventclient'),
+        ('network', [
+            ('eventclient', [
+                ('enabled', False),
+            ]),
+        ]),
+        ('icon', [
+            ('url', None),
+            ('type', None),
+        ]),
+    ]),
+    ('server', [
+        ('network', [
+            ('ip', 'localhost'),
+            ('udp', {
+                'port': 9777,
+            }),
+        ]),
+    ]),
+]
+
 KEY_VKEY  = 0xF000  # a virtual key/functional key e.g. cursor left
 KEY_ASCII = 0xF100  # a printable character in the range of TRUE ASCII (from 0 to 127)
 
@@ -390,3 +415,6 @@ class Packet_PING(Packet):
     def __init__(self, uid):
         Packet.__init__(self, uid)
         self.packet_type = PT_PING
+
+
+DefaultSettings(settingsDefaults)
