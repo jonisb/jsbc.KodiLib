@@ -42,13 +42,6 @@ settingsDefaults = [
         ('network', [
             ('User-Agent', "{0}/{1} {2}".format(__name__, __version__, build_opener().addheaders[0][1])),
         ]),
-        ('eventclient', [
-            ('enabled', True),
-        ]),
-        ('icon', [
-            ('url', None),
-            ('type', None),
-        ]),
     ]),
     ('server', [
         ('friendlyName', 'Kodi'),
@@ -251,7 +244,7 @@ class kodi(object):
             except WindowsError:
                 if not CacheDir.exists():
                     raise
-        if self.settings['client']['eventclient']['enabled']:
+        if self.settings['client']['network']['eventclient']['enabled']:
             self.eventclient = eventserver.eventclient(settings)
 
     def connect(self):
