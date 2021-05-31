@@ -149,6 +149,7 @@ def StartKodi(cls):
     logger.debug("RunKodi: %s", cls.KodiProc.poll())
     #ssdp.waitForDevice(id=UUID[cls.Version][cls.Bitness])
     settings['client']['network']['eventclient']['enabled'] = True
+    settings['client']['network']['jsonrpc']['enabled'] = True
     import time
     time.sleep(10)
     cls.Kodi = ConnectKodi()

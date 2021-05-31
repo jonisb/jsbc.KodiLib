@@ -12,8 +12,6 @@ import json
 import logging
 logger = logging.getLogger(__name__)
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
-from jsbc.Toolbox import DefaultSettings as ToolboxSettings
-from jsbc.KodiLib import settingsDefaults as KodiLibDefaults
 try:
     import regex
 except ImportError:
@@ -190,9 +188,6 @@ def JSONSplit(data):
     return parts, rest
 
 
-def DefaultSettings(AddDefaults=settingsDefaults, Data=settings):
-    Data = ToolboxSettings(KodiLibDefaults, Data)
-    return ToolboxSettings(AddDefaults, Data)
 
 
-DefaultSettings()
+DefaultSettings(settingsDefaults)

@@ -49,6 +49,13 @@ class test_KodiInfo(unittest.TestCase):
         assert info[18]['python'].match(semantic_version.Version('2.26.0'))
 
 
+class test_jsonrpc(unittest.TestCase):
+    def test_JSONSplit(self):
+        from jsbc.KodiLib.jsonrpc import JSONSplit
+
+        assert JSONSplit("") == ([], '')
+
+
 import os
 if not os.getenv("GITHUB_ACTIONS"):  # Running Kodi in github actions not working so need to skip tests
     class base(testbase):
@@ -58,14 +65,13 @@ if not os.getenv("GITHUB_ACTIONS"):  # Running Kodi in github actions not workin
         def test_eventclient_ping(self):
             assert self.Kodi.eventclient.ping() == None
 
+        def test_jsonrpc_enabled(self):
+            assert self.Kodi.settings['client']['network']['jsonrpc']['enabled'] == True
+
         def test_jsonrpc_ping(self):
-            from jsbc.KodiLib.jsonrpc import jsonrpc, DefaultSettings
 
-            settings = DefaultSettings()
-            settings['client']['network']['jsonrpc']['enabled'] = True
 
-            with jsonrpc() as Kodi:
-                assert Kodi.send('JSONRPC.Ping')['result'] == 'pong'
+            assert self.Kodi.jsonrpc.send('JSONRPC.Ping')['result'] == 'pong'
 
 
     CreateKodiVersionSpecificTests(base, globals())
