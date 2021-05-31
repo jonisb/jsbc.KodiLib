@@ -4,10 +4,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 import platform
 
 from bs4 import BeautifulSoup
-try:
-    import regex
-except ImportError:
-    import re as regex
+import regex
 import semantic_version
 
 from jsbc import network

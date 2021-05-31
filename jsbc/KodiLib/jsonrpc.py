@@ -12,10 +12,7 @@ import json
 import logging
 logger = logging.getLogger(__name__)
 from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
-try:
-    import regex
-except ImportError:
-    import re as regex
+import regex
 
 settingsDefaults = [
     ('client', [

@@ -8,11 +8,7 @@ import os
 import ast
 import xml.dom.minidom
 import logging
-
-try:
-    import regex
-except ImportError:
-    import re as regex
+import regex
 from jsbc.compat.python3 import *
 from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.compat.urllib.build_opener import build_opener
