@@ -4,6 +4,7 @@ from __future__ import print_function, unicode_literals, division, absolute_impo
 import unittest
 import logging
 logging.basicConfig(filename='debug.log', filemode='w', level=logging.DEBUG)
+from jsbc.KodiLib.testing.client import CreateKodiVersionSpecificTests, base as testbase
 logger = logging.getLogger(__name__)
 
 
@@ -48,34 +49,23 @@ class test_KodiInfo(unittest.TestCase):
         assert info[18]['python'].match(semantic_version.Version('2.26.0'))
 
 
-from jsbc.KodiLib.testing.client import CreateKodiVersionSpecificTests, base as testbase
+import os
+if not os.getenv("GITHUB_ACTIONS"):  # Running Kodi in github actions not working so need to skip tests
+    class base(testbase):
+        def test_eventclient_enabled(self):
+            assert self.Kodi.settings['client']['network']['eventclient']['enabled'] == True
+
+        def test_eventclient_ping(self):
+            assert self.Kodi.eventclient.ping() == None
+
+        def test_jsonrpc_ping(self):
+            from jsbc.KodiLib.jsonrpc import jsonrpc, DefaultSettings
+
+            settings = DefaultSettings()
+            settings['client']['network']['jsonrpc']['enabled'] = True
+
+            with jsonrpc() as Kodi:
+                assert Kodi.send('JSONRPC.Ping')['result'] == 'pong'
 
 
-class base(testbase):
-    def test_jsonrpc_connect(self):
-        from jsbc.KodiLib.jsonrpc import jsonrpc, DefaultSettings
-
-        settings = DefaultSettings()
-        settings['client']['network']['jsonrpc']['enabled'] = True
-
-        with jsonrpc() as Kodi:
-            assert True
-
-    def test_jsonrpc_ping(self):
-        from jsbc.KodiLib.jsonrpc import jsonrpc, DefaultSettings
-
-        settings = DefaultSettings()
-        settings['client']['network']['jsonrpc']['enabled'] = True
-
-        with jsonrpc() as Kodi:
-            assert Kodi.send('JSONRPC.Ping')['result'] == 'pong'
-
-    def test_eventclient_connect(self):
-        from jsbc import KodiLib
-        #Kodi = KodiLib.kodi({'client': {'network': {'jsonrpc': {'enabled': False}}}})
-        Kodi = KodiLib.kodi()
-        Kodi.connect()
-        Kodi.disconnect()
-
-
-CreateKodiVersionSpecificTests(base, globals())
+    CreateKodiVersionSpecificTests(base, globals())
