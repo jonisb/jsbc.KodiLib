@@ -47,3 +47,16 @@ class test_KodiInfo(unittest.TestCase):
         assert info[18]['metadata'].match(semantic_version.Version('2.1.0'))
         assert info[18]['python'].match(semantic_version.Version('2.1.0'))
         assert info[18]['python'].match(semantic_version.Version('2.26.0'))
+
+
+import os
+if not os.getenv("GITHUB_ACTIONS"):  # Running Kodi in github actions not working so need to skip tests
+    class base(testbase):
+        def test_eventclient_enabled(self):
+            assert self.Kodi.settings['client']['network']['eventclient']['enabled'] == True
+
+        def test_eventclient_ping(self):
+            assert self.Kodi.eventclient.ping() == None
+
+
+    CreateKodiVersionSpecificTests(base, globals())
