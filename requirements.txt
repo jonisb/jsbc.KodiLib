@@ -1,4 +1,4 @@
 semantic-version
 beautifulsoup4
 requests
-regex
+regex==2021.3.17
