@@ -1,3 +1,4 @@
 semantic-version
 beautifulsoup4
 requests
+regex
