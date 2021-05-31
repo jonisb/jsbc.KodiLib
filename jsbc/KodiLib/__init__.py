@@ -8,11 +8,7 @@ import os
 import ast
 import xml.dom.minidom
 import logging
-
-try:
-    import regex
-except ImportError:
-    import re as regex
+import regex
 from jsbc.compat.python3 import *
 from jsbc.compat.OrderedDict import OrderedDict
 from jsbc.compat.urllib.build_opener import build_opener
@@ -21,6 +17,7 @@ from jsbc.Toolbox import SettingsClass, DefaultSettings, settings
 from jsbc import network
 from jsbc.network import DownloadURL, DownloadPage
 from . import eventserver
+from . import jsonrpc
 
 logger = logging.getLogger(__name__)
 
@@ -246,10 +243,16 @@ class kodi(object):
                     raise
         if self.settings['client']['network']['eventclient']['enabled']:
             self.eventclient = eventserver.eventclient(settings)
+        if self.settings['client']['network']['jsonrpc']['enabled']:
+            self.jsonrpc = jsonrpc.jsonrpc(settings)
 
     def connect(self):
         try:
             self.eventclient.connect()
+        except AttributeError:
+            pass
+        try:
+            self.jsonrpc.connect()
         except AttributeError:
             pass
 
@@ -257,6 +260,10 @@ class kodi(object):
         return ActionBaseClass(ast.literal_eval(self.settings['commands'][Commands]))
 
     def disconnect(self):
+        try:
+            self.jsonrpc.close()
+        except AttributeError:
+            pass
         try:
             self.eventclient.close()
         except AttributeError:

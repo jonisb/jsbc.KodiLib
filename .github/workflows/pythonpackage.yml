@@ -96,3 +96,9 @@ jobs:
       run: |
         pip install --no-python-version-warning pytest
         python -m pytest
+    - name: debug.log
+      uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: debug.log
+        path: debug.log
