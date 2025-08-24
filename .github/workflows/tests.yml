@@ -54,13 +54,19 @@ jobs:
 
     - name: Run tests
       run: pytest tests/ --verbose --cov=. --cov-report=xml
-    
-    - name: Stop Kodi
-      if: always() && env.KODI_PID != ''
-      run: |
-        kill ${{ env.KODI_PID }} || true
-        wait ${{ env.KODI_PID }} 2>/dev/null || true
 
+    - name: Stop Kodi
+      if: always() && env.KODI_PID
+      run: |
+        # Stop Kodi process if it exists
+        if ps -p ${{ env.KODI_PID }} > /dev/null; then
+          echo "Stopping Kodi (PID: ${{ env.KODI_PID }})"
+          timeout 10s kill ${{ env.KODI_PID }} || { echo "Failed to terminate Kodi, attempting SIGKILL"; timeout 5s kill -9 ${{ env.KODI_PID }}; }
+          wait ${{ env.KODI_PID }} || echo "Kodi process already terminated"
+        else
+          echo "Kodi process (PID: ${{ env.KODI_PID }}) not found"
+        fi
+        
     - name: Upload log files
       if: always()
       uses: actions/upload-artifact@v4
