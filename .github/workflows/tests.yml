@@ -56,10 +56,10 @@ jobs:
       run: pytest tests/ --verbose --cov=. --cov-report=xml
     
     - name: Stop Kodi
-        if: always() && env.KODI_PID != ''
-        run: |
-          kill ${{ env.KODI_PID }} || true
-          wait ${{ env.KODI_PID }} 2>/dev/null || true
+      if: always() && env.KODI_PID != ''
+      run: |
+        kill ${{ env.KODI_PID }} || true
+        wait ${{ env.KODI_PID }} 2>/dev/null || true
 
     - name: Upload log files
       if: always()
