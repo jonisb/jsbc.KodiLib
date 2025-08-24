@@ -20,9 +20,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y kodi
     
-    - name: Run Kodi and Test
+    - name: Run Kodi
       run: |
         xvfb-run -a kodi & 
+        sleep 60 # Give kodi time to start
+
+    - name: Run tests
+      run: pytest tests/
 
     - name: Upload log files
       if: failure()
