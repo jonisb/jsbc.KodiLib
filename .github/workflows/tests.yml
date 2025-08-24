@@ -21,7 +21,11 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        pip install pytest requests
+        pip install pytest
+        
+    - name: Install jsbc.KodiLib
+      run: |
+        pip install .        
     
     - name: Install Kodi
       run: |
