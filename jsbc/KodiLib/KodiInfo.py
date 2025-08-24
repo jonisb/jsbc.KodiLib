@@ -75,11 +75,14 @@ def KodiInfo(Ver=None, CachePath=None):
         buildtypes = ("releases",) # , "nightlies", "test-builds"
         if platform.system() == 'Windows':
             Platform = "windows"
+        elif platform.system() == 'Linux':
+            Platform = 'Linux'
         else:
             raise Exception('Platform not supported: {0}'.format(platform.system()))
         if platform.machine() == 'AMD64':
             bitness = ("win64", "win32")
         else:
+            raise Exception('Platform not supported: {0}'.format(platform.machine()))
             bitness = ("win32",)
         for buildtype in buildtypes:
             for bits in bitness:
