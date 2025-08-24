@@ -9,6 +9,7 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
     - uses: actions/checkout@v4
     
@@ -32,7 +33,7 @@ jobs:
           git+https://github.com/jonisb/jsbc.compat.git#egg=jsbc.compat \
           git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox \
           git+https://github.com/jonisb/jsbc.network.git#egg=jsbc.network \
-          pytest
+          pytest pytest-cov
         
     - name: Install jsbc.KodiLib
       run: |
@@ -47,26 +48,23 @@ jobs:
       run: |
         xvfb-run -a kodi &
         KODI_PID=$!
-        sleep 60 # Give kodi time to start
+        # Wait for Kodi's JSON-RPC to be available (timeout after 120s)
+        timeout 120 bash -c 'until curl -s http://localhost:8080/jsonrpc -d "{\"jsonrpc\":\"2.0\",\"method\":\"JSONRPC.Ping\",\"id\":1}" | grep -q "pong"; do sleep 1; done' || { echo "Kodi failed to start"; exit 1; }
+        echo "KODI_PID=$KODI_PID" >> $GITHUB_ENV
 
     - name: Run tests
       run: pytest tests/ --verbose --cov=. --cov-report=xml
     
-    - name: Upload coverage report
-      uses: actions/upload-artifact@v4
-      with:
-        path: coverage.xml
-
     - name: Stop Kodi
-      run: |
-        if [ -n "$KODI_PID" ] && ps -p $KODI_PID > /dev/null; then
-          kill $KODI_PID
-          wait $KODI_PID 2>/dev/null || true
-        fi
+        if: always() && env.KODI_PID != ''
+        run: |
+          kill ${{ env.KODI_PID }} || true
+          wait ${{ env.KODI_PID }} 2>/dev/null || true
 
     - name: Upload log files
-      if: failure()
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         path: |
-          ~/.kodi/kodi.log
+          ~/.kodi/temp/kodi.log
+          coverage.xml
