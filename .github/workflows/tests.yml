@@ -10,21 +10,29 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.x'
+        python-version: '3.11'
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
 
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install git+https://github.com/jonisb/jsbc.compat.git#egg=jsbc.compat
-        pip install git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox
-        pip install git+https://github.com/jonisb/jsbc.network.git#egg=jsbc.network
-        pip install pytest
+        pip install -r requirements.txt \
+          git+https://github.com/jonisb/jsbc.compat.git#egg=jsbc.compat \
+          git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox \
+          git+https://github.com/jonisb/jsbc.network.git#egg=jsbc.network \
+          pytest
         
     - name: Install jsbc.KodiLib
       run: |
@@ -42,13 +50,20 @@ jobs:
         sleep 60 # Give kodi time to start
 
     - name: Run tests
-      run: pytest tests/
+      run: pytest tests/ --verbose --cov=. --cov-report=xml
+    
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        path: coverage.xml
 
     - name: Stop Kodi
       run: |
-        if [ -n "$KODI_PID" ]; then
-          kill $KODI_PID || true
+        if [ -n "$KODI_PID" ] && ps -p $KODI_PID > /dev/null; then
+          kill $KODI_PID
+          wait $KODI_PID 2>/dev/null || true
         fi
+
     - name: Upload log files
       if: failure()
       uses: actions/upload-artifact@v4
