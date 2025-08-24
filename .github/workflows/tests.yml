@@ -1,6 +1,8 @@
 name: kodicmd testing
 
 on:
+  push:
+    branches: [ kodicmd ]
   pull_request:
     branches: [ kodicmd ]
 
