@@ -24,12 +24,18 @@ jobs:
     
     - name: Run Kodi
       run: |
-        xvfb-run -a kodi & 
+        xvfb-run -a kodi &
+        KODI_PID=$!
         sleep 60 # Give kodi time to start
 
     - name: Run tests
       run: pytest tests/
 
+    - name: Stop Kodi
+      run: |
+        if [ -n "$KODI_PID" ]; then
+          kill $KODI_PID || true
+        fi
     - name: Upload log files
       if: failure()
       uses: actions/upload-artifact@v4
