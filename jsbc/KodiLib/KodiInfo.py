@@ -109,7 +109,7 @@ def KodiInfo(Ver=None, CachePath=None):
                             info[ver.major] = {'version': ver, 'codename': codename, 'build': {}}
                         else:
                             info[ver.major]['codename'] = codename
-
+                        info[ver.major]['build'][bits] = {'URL': URL}
         branch = 'master'
         URL = repository + "raw/{branch}/".format(branch=branch) + 'version.txt'
         try:
