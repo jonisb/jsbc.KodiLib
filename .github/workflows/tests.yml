@@ -1,0 +1,32 @@
+name: kodicmd testing
+
+on:
+  pull_request:
+    branches: [ kodicmd ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+    
+    - name: Install Kodi
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y kodi
+    
+    - name: Run Kodi and Test
+      run: |
+        xvfb-run -a kodi & 
+
+    - name: Upload log files
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        path: |
+          ~/.kodi/kodi.log
