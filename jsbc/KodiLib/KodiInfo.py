@@ -146,12 +146,15 @@ def KodiInfo(Ver=None, CachePath=None):
 
         buildtypes = ("nightlies",) # , "test-builds"
         info[version_major]['build'] = {}
-        for buildtype in buildtypes:
-            for bits in bitness:
-                URL = "http://{host}/{buildtype}/{Platform}/{bits}/".format(host=host, buildtype=buildtype, Platform=Platform, bits=bits)
-                Links = GetLinkList(URL)
-                for _, _, bits, URL in GetKodiEXEList(Links, 'master'):
-                    info[version_major]['build'][bits] = {'URL': URL}
+        if Platform == "windows":
+            for buildtype in buildtypes:
+                for bits in bitness:
+                    URL = "http://{host}/{buildtype}/{Platform}/{bits}/".format(host=host, buildtype=buildtype, Platform=Platform, bits=bits)
+                    Links = GetLinkList(URL)
+                    for _, _, bits, URL in GetKodiEXEList(Links, 'master'):
+                        info[version_major]['build'][bits] = {'URL': URL}
+        elif Platform == "linux":
+            pass
 
         for ver in info:
             for plugin in ('xbmc.python', 'xbmc.gui', 'xbmc.metadata'):
