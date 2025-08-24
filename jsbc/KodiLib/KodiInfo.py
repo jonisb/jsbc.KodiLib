@@ -76,26 +76,39 @@ def KodiInfo(Ver=None, CachePath=None):
         if platform.system() == 'Windows':
             Platform = "windows"
         elif platform.system() == 'Linux':
-            Platform = 'Linux'
+            Platform = 'linux'
         else:
             raise Exception('Platform not supported: {0}'.format(platform.system()))
-        if platform.machine() == 'AMD64':
+        if platform.machine() in ('AMD64', 'x86_64'):
             bitness = ("win64", "win32")
         else:
             raise Exception('Platform not supported: {0}'.format(platform.machine()))
             bitness = ("win32",)
-        for buildtype in buildtypes:
-            for bits in bitness:
-                URL = "http://{host}/{buildtype}/{Platform}/{bits}/".format(host=host, buildtype=buildtype, Platform=Platform, bits=bits)
-                Links = GetLinkList(URL)
-                for ver, codename, bits, URL in GetKodiEXEList(Links, 'release'):
-                    try:
-                        info[ver.major]['version'] = ver
-                    except Exception:
-                        info[ver.major] = {'version': ver, 'codename': codename, 'build': {}}
-                    else:
-                        info[ver.major]['codename'] = codename
-                    info[ver.major]['build'][bits] = {'URL': URL}
+        if Platform == "windows":
+            for buildtype in buildtypes:
+                for bits in bitness:
+                    URL = "http://{host}/{buildtype}/{Platform}/{bits}/".format(host=host, buildtype=buildtype, Platform=Platform, bits=bits)
+                    Links = GetLinkList(URL)
+                    for ver, codename, bits, URL in GetKodiEXEList(Links, 'release'):
+                        try:
+                            info[ver.major]['version'] = ver
+                        except Exception:
+                            info[ver.major] = {'version': ver, 'codename': codename, 'build': {}}
+                        else:
+                            info[ver.major]['codename'] = codename
+                        info[ver.major]['build'][bits] = {'URL': URL}
+        elif Platform == "linux":
+            for buildtype in buildtypes:
+                for bits in bitness:
+                    URL = "http://{host}/{buildtype}/windows/{bits}/".format(host=host, buildtype=buildtype, Platform=Platform, bits=bits)
+                    Links = GetLinkList(URL)
+                    for ver, codename, bits, URL in GetKodiEXEList(Links, 'release'):
+                        try:
+                            info[ver.major]['version'] = ver
+                        except Exception:
+                            info[ver.major] = {'version': ver, 'codename': codename, 'build': {}}
+                        else:
+                            info[ver.major]['codename'] = codename
 
         branch = 'master'
         URL = repository + "raw/{branch}/".format(branch=branch) + 'version.txt'
