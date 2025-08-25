@@ -54,7 +54,7 @@ jobs:
         echo "KODI_PID=$KODI_PID" >> $GITHUB_ENV
 
     - name: Run tests
-      run: pytest tests/ --verbose --cov=. --cov-report=xml
+      run: pytest tests/ --verbose -n auto --junitxml=test-results.xml --cov=. --cov-report=xml
 
     - name: Stop Kodi
       if: always() && env.KODI_PID
@@ -72,6 +72,9 @@ jobs:
       if: always()
       uses: actions/upload-artifact@v4
       with:
+        name: test-artifacts
         path: |
-          ~/.kodi/temp/kodi.log
+          test-results.xml
           coverage.xml
+          ~/.kodi/temp/kodi.log
+          ~/.kodi/temp/kodi.old
