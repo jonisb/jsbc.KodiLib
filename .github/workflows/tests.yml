@@ -33,7 +33,7 @@ jobs:
           git+https://github.com/jonisb/jsbc.compat.git#egg=jsbc.compat \
           git+https://github.com/jonisb/Toolbox.git#egg=jsbc.Toolbox \
           git+https://github.com/jonisb/jsbc.network.git#egg=jsbc.network \
-          pytest pytest-cov
+          pytest pytest-cov pytest-xdist
         
     - name: Install jsbc.KodiLib
       run: |
